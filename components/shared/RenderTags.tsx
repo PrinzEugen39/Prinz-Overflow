@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 type TRenderTagsProps = {
   id: number;
   tagName: string;
-  totalQuestion: number;
+  totalQuestion?: number;
   showCount?: boolean;
 };
 

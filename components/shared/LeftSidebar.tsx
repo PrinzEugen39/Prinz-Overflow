@@ -10,6 +10,7 @@ import React from "react";
 
 export default function LeftSidebar() {
   const pathname = usePathname();
+
   return (
     <section className="background-light900_dark200 light-border sticky top-0 left-0 flex flex-col h-screen justify-between overflow-y-auto border-r p-6 pt-36 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[266px]">
       <div className="flex flex-col flex-1 gap-6">

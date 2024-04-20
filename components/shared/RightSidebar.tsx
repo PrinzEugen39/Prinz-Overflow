@@ -2,37 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import RenderTags from "./RenderTags";
+import { hotQuestions, popularTags } from "@/constants/mocks";
 
-const hotQuestions = [
-  {
-    id: 1,
-    title: "How do I debug a Node.js API running on Vercel?",
-  },
-  {
-    id: 2,
-    title: "How do I make my Next.js app faster?",
-  },
-  {
-    id: 3,
-    title: "How do I deploy my Next.js app to AWS?",
-  },
-  {
-    id: 4,
-    title: "How do I add styled-components to my Next.js app?",
-  },
-  {
-    id: 5,
-    title: "How do I add Redux to my Next.js app?",
-  },
-];
 
-const popularTags = [
-  { id: 1, name: "React", totalQuestion: 10 },
-  { id: 2, name: "JavaScript", totalQuestion: 8 },
-  { id: 3, name: "Next.js", totalQuestion: 6 },
-  { id: 4, name: "TypeScript", totalQuestion: 4 },
-  { id: 5, name: "CSS", totalQuestion: 7 },
-];
 
 export default function RightSidebar() {
   return (
