@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { KeyboardEvent, useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,9 +16,15 @@ import { QuestionsSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Badge } from "../ui/badge";
+import Image from "next/image";
+import { createQuestion } from "@/lib/actions/question.action";
+
+const type: any = "create";
 
 const Question = () => {
   const editorRef = useRef(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof QuestionsSchema>>({
     resolver: zodResolver(QuestionsSchema),
@@ -30,11 +36,61 @@ const Question = () => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof QuestionsSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
+    setIsSubmitting(true);
+    try {
+      await createQuestion({});
+      // make an async call to your API -> create a question
+      // contain all form data
+
+      // navigate to home page
+      console.log(values);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
+
+  function handleInputKeyDown(e: KeyboardEvent<HTMLInputElement>, field: any) {
+    if (e.key === "Enter" && field.name === "tags") {
+      e.preventDefault();
+
+      const tagInput = e.target as HTMLInputElement;
+      const tagValue = tagInput.value.trim();
+
+      if (tagValue !== "") {
+        if (tagValue.length > 15) {
+          return form.setError("tags", {
+            type: "required",
+            message: "Tags cannot exceed 15 characters",
+          });
+        }
+
+        // This condition checks if the entered tagValue (trimmed user input) is not already present in the field.value array (current list of tags).
+        // as never casting is for ensuring tagValue is treated as the exact type it is at that point (usually a string).
+        const condition = !field.value.includes(tagValue as never);
+        // console.log(condition);
+
+        if (condition) {
+          form.setValue("tags", [...field.value, tagValue]);
+          tagInput.value = "";
+          form.clearErrors("tags");
+        }
+      } else {
+        // console.log("kalo false");
+        //  manually validate the input without submitting the form
+        form.trigger();
+      }
+    }
+  }
+
+  function handleTagRemove(tag: string, field: any) {
+    const newTags = field.value.filter((t: string) => t !== tag);
+
+    form.setValue("tags", newTags);
+  }
+
   return (
     <>
       <Form {...form}>
@@ -81,6 +137,8 @@ const Question = () => {
                       // @ts-ignore
                       editorRef.current = editor;
                     }}
+                    onBlur={field.onBlur}
+                    onEditorChange={(content) => field.onChange(content)}
                     initialValue=""
                     init={{
                       height: 350,
@@ -130,11 +188,33 @@ const Question = () => {
                   Tags <span className="text-primary-500">*</span>
                 </FormLabel>
                 <FormControl className="mt-3.5">
-                  <Input
-                    className="no-focus paragraph-regular background-light900_dark300 border light-border-2 text-dark300_light700 min-h-[56px] "
-                    {...field}
-                    placeholder="Add tags..."
-                  />
+                  <>
+                    <Input
+                      className="no-focus paragraph-regular background-light900_dark300 border light-border-2 text-dark300_light700 min-h-[56px] "
+                      onKeyDown={(e) => handleInputKeyDown(e, field)}
+                      placeholder="Add tags..."
+                    />
+                    {field.value.length > 0 && (
+                      <div className="flex-start mt-2.5 gap-2.5">
+                        {field.value.map((tag) => (
+                          <Badge
+                            key={tag}
+                            className="subtle-medium background-light800_dark300 text-light400_light500 flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 capitalize"
+                          >
+                            {tag}{" "}
+                            <Image
+                              src={"/assets/icons/close.svg"}
+                              alt="close"
+                              width={12}
+                              height={12}
+                              className="cursor-pointer object-contain invert-0 dark:invert"
+                              onClick={() => handleTagRemove(tag, field)}
+                            />
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </>
                 </FormControl>
                 <FormDescription className="body-regular mt-2.5 text-light-500">
                   Add up to 3 tags to describe what your question is about. You
@@ -144,7 +224,18 @@ const Question = () => {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          
+          <Button
+            type="submit"
+            className="primary-gradient w-fit !text-light-900"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>{type === "edit" ? "Editing..." : "Post"}</>
+            ) : (
+              <>{type === "edit" ? "Edit Question" : "Ask a Question"}</>
+            )}
+          </Button>
         </form>
       </Form>
     </>
