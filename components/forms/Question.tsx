@@ -19,12 +19,19 @@ import { z } from "zod";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
 import { createQuestion } from "@/lib/actions/question.action";
+import { usePathname, useRouter } from "next/navigation";
+
+type TQuestion = {
+  mongoUserId: string;
+};
 
 const type: any = "create";
 
-const Question = () => {
+const Question = ({ mongoUserId }: TQuestion) => {
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
 
   const form = useForm<z.infer<typeof QuestionsSchema>>({
     resolver: zodResolver(QuestionsSchema),
@@ -39,12 +46,18 @@ const Question = () => {
   async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     setIsSubmitting(true);
     try {
-      await createQuestion({});
       // make an async call to your API -> create a question
-      // contain all form data
+      await createQuestion({
+        title: values.title,
+        content: values.body,
+        tags: values.tags,
+        author: JSON.parse(mongoUserId),
+        path: pathname,
+      });
 
       // navigate to home page
-      console.log(values);
+      router.push("/");
+      // console.log(values);
     } catch (error) {
       console.log(error);
     } finally {
@@ -224,7 +237,7 @@ const Question = () => {
               </FormItem>
             )}
           />
-          
+
           <Button
             type="submit"
             className="primary-gradient w-fit !text-light-900"

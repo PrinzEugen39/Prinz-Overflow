@@ -5,10 +5,13 @@ import QuestionsCard from "@/components/cards/QuestionsCard";
 import LocalSearch from "@/components/shared/search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
-import { questions } from "@/constants/mocks";
+// import { questions } from "@/constants/mocks";
 import Link from "next/link";
+import { getQuestions } from "@/lib/actions/question.action";
 
-export default function Home() {
+export default async function Home() {
+  const result = await getQuestions({});
+
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -40,8 +43,8 @@ export default function Home() {
       <ExpandedHomeFilters />
 
       <div className="mt-10 flex w-full flex-col gap-6">
-        {questions.length > 0 ? (
-          questions.map((question) => (
+        {result?.questions.length > 0 ? (
+          result.questions.map((question) => (
             <QuestionsCard
               key={question._id}
               _id={question._id}
