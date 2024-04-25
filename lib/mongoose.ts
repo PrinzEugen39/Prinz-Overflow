@@ -8,7 +8,7 @@ const DB =
     process.env.MONGODB_PASSWORD!
   ) || "";
 
-console.log(DB);
+// console.log(DB);
 
 export async function connectToDatabase() {
   mongoose.set("strictQuery", true);

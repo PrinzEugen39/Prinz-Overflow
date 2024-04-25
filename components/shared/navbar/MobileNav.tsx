@@ -15,7 +15,7 @@ import { usePathname } from "next/navigation";
 
 function NavContent() {
   const pathname = usePathname();
-  console.log("pathname", pathname);
+  // console.log("pathname", pathname);
 
   return (
     <section className="flex h-full flex-col gap-6 pt-16">
