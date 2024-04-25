@@ -1,6 +1,13 @@
 import { IUser } from "@/database/user.model";
 import { Schema } from "mongoose";
 
+export interface GetAllParams {
+  page?: number;
+  pageSize?: number;
+  filter?: string;
+  searchQuery?: string;
+}
+
 export interface GetQuestionParams {
   page?: number;
   pageSize?: number;
@@ -17,6 +24,7 @@ export interface CreateQuestionParams {
 }
 
 /// // USER ACTIONS /////
+
 export interface CreateUserParams {
   clerkId: string;
   name: string;
@@ -37,4 +45,10 @@ export interface UpdateUserParams {
 
 export interface DeleteUserParams {
   clerkId: string;
+}
+
+// TAG ACTIONS //
+export interface GetTopInteractedTagsParams {
+  userId: string;
+  limit?: number;
 }

@@ -27,7 +27,7 @@ type TQuestion = {
 
 const type: any = "create";
 
-const Question = ({ mongoUserId }: TQuestion) => {
+const QuestionForm = ({ mongoUserId }: TQuestion) => {
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
@@ -255,4 +255,4 @@ const Question = ({ mongoUserId }: TQuestion) => {
   );
 };
 
-export default Question;
+export default QuestionForm;
