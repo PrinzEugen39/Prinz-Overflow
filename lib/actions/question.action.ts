@@ -28,6 +28,29 @@ export async function getQuestions(params: GetQuestionParams) {
   }
 }
 
+export async function getQuestionById(params: string) {
+  try {
+    connectToDatabase();
+
+    const question = await Question.findById(params)
+      .populate({
+        path: "tags",
+        model: Tag,
+        select: "_id name",
+      })
+      .populate({
+        path: "author",
+        model: User,
+        select: "_id clerkId name picture",
+      });
+
+    return question;
+  } catch (error) {
+    console.log(error);
+    throw new Error("An error occurred while fetching questions");
+  }
+}
+
 export async function createQuestion(params: CreateQuestionParams) {
   try {
     // connect to DB
