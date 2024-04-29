@@ -6,6 +6,8 @@ import { Editor } from "@tinymce/tinymce-react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Image from "next/image";
+import { createAnswer } from "@/lib/actions/answer.action";
 import {
   Form,
   FormControl,
@@ -14,11 +16,19 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Button } from "../ui/button";
-import Image from "next/image";
+import { usePathname } from "next/navigation";
 
-const AnswerForm = () => {
+interface IAnswerForm {
+  authorId: string;
+  questionId: string;
+  question: string;
+}
+
+const AnswerForm = ({ authorId, questionId, question }: IAnswerForm) => {
+  const pathname = usePathname();
   const { mode } = useTheme();
   const editorRef = useRef(null);
+  // eslint-disable-next-line no-unused-vars
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof AnswerSchema>>({
@@ -28,7 +38,29 @@ const AnswerForm = () => {
     },
   });
 
-  function handleCreateAnswer() {}
+  async function handleCreateAnswer(values: z.infer<typeof AnswerSchema>) {
+    setIsSubmitting(true);
+    try {
+      await createAnswer({
+        content: values.answer,
+        author: JSON.parse(authorId),
+        question: JSON.parse(questionId),
+        path: pathname,
+      });
+
+      form.reset();
+
+      if (editorRef.current) {
+        const editor = editorRef.current as any;
+
+        editor.setContent("");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <div>
@@ -62,10 +94,6 @@ const AnswerForm = () => {
             name="answer"
             render={({ field }) => (
               <FormItem className="flex w-full flex-col gap-3">
-                {/* <FormLabel className="paragraph-semibold text-dark400_light800">
-                Detailed explanation of your question{" "}
-                <span className="text-primary-500">*</span>
-              </FormLabel> */}
                 <FormControl className="mt-3.5">
                   <Editor
                     apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}

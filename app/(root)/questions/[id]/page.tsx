@@ -9,6 +9,9 @@ import { formatNumber, getTimestamp } from "@/lib/utils";
 import ParseHTML from "@/components/shared/ParseHTML";
 import RenderTags from "@/components/shared/RenderTags";
 import AnswerForm from "@/components/forms/AnswerForm";
+import { auth } from "@clerk/nextjs";
+import { getUserById } from "@/lib/actions/user.action";
+import AllAnswers from "@/components/shared/AllAnswers";
 
 interface IAuthor {
   _id: ObjectId;
@@ -38,6 +41,13 @@ interface IQuestion {
 
 const QuestionDetails = async ({ params }: ParamsProps) => {
   const question: IQuestion = await getQuestionById(params.id);
+  const { userId: clerkId } = auth();
+
+  let currentUser;
+
+  if (clerkId) {
+    currentUser = await getUserById({ userId: clerkId });
+  }
 
   return (
     <>
@@ -104,7 +114,17 @@ const QuestionDetails = async ({ params }: ParamsProps) => {
         ))}
       </div>
 
-      <AnswerForm />
+      <AllAnswers
+        questionId={JSON.stringify(question._id)}
+        authorId={JSON.stringify(currentUser._id)}
+        totalAnswers={question.answers.length}
+      />
+
+      <AnswerForm
+        authorId={JSON.stringify(currentUser._id)}
+        question={question.content}
+        questionId={JSON.stringify(question._id)}
+      />
     </>
   );
 };
