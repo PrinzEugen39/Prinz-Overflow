@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { ObjectId } from "mongodb";
 
 type TRenderTags = {
-  id: ObjectId;
+  id: ObjectId | number;
   tagName: string;
   totalQuestion?: number;
   showCount?: boolean;
