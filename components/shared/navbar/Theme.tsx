@@ -41,13 +41,13 @@ export default function Theme() {
           {themes.map((theme) => (
             <MenubarItem
               onClick={() => {
-                  setMode(theme.value)
+                setMode(theme.value);
 
-                  if(theme.value !== 'system') {
-                    localStorage.theme = theme.value
-                  } else {
-                    localStorage.removeItem('theme')
-                  }
+                if (theme.value !== "system") {
+                  localStorage.theme = theme.value;
+                } else {
+                  localStorage.removeItem("theme");
+                }
               }}
               key={theme.value}
               className="flex items-center gap-4 px-2.5 py-2 dark:focus:bg-dark-400 focus:bg-light-800"

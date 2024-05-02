@@ -28,8 +28,7 @@ const AnswerForm = ({ authorId, questionId, question }: IAnswerForm) => {
   const pathname = usePathname();
   const { mode } = useTheme();
   const editorRef = useRef(null);
-  // eslint-disable-next-line no-unused-vars
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof AnswerSchema>>({
     resolver: zodResolver(AnswerSchema),
