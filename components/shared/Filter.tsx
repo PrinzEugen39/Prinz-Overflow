@@ -27,14 +27,10 @@ const Filter = ({ filters, constainerClasses, otherClasses }: TFilter) => {
             <SelectValue placeholder="Select a Filter" />
           </div>
         </SelectTrigger>
-        <SelectContent className="dark:border-dark-400 dark:bg-dark-300 bg-light-900">
+        <SelectContent>
           <SelectGroup>
             {filters.map((filter) => (
-              <SelectItem
-                key={filter.value}
-                value={filter.value}
-                className="text-dark100_light900"
-              >
+              <SelectItem key={filter.value} value={filter.value}>
                 {filter.name}
               </SelectItem>
             ))}
