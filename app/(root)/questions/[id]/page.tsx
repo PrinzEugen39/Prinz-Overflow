@@ -12,7 +12,6 @@ import AnswerForm from "@/components/forms/AnswerForm";
 import { auth } from "@clerk/nextjs";
 import { getUserById } from "@/lib/actions/user.action";
 import AllAnswers from "@/components/shared/AllAnswers";
-import Votes from "@/components/shared/Votes";
 
 interface IAuthor {
   _id: ObjectId;
@@ -70,9 +69,7 @@ const QuestionDetails = async ({ params }: ParamsProps) => {
             </p>
           </Link>
 
-          <div className="flex justify-end">
-            <Votes type="question" id={JSON.stringify(question._id)} />
-          </div>
+          <div className="flex justify-end">VOTING</div>
         </div>
 
         <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full text-left">
