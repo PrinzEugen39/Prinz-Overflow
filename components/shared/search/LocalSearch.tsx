@@ -20,7 +20,7 @@ const LocalSearch = ({
 }: TLocalSearch) => {
   return (
     <div
-      className={`background-light800_darkgradient flex min-h-[56px] grow items-center gap-4 rounded-lg px-4 ${otherClasses}`}
+      className={`background-light850_darkgradient flex min-h-[56px] grow items-center gap-4 rounded-lg px-4 ${otherClasses}`}
     >
       {iconPosition === "left" && (
         <Image
@@ -34,7 +34,7 @@ const LocalSearch = ({
       <Input
         type="text"
         placeholder={placeholder}
-        className="paragraph-regular no-focus placeholder background-light800_darkgradient border-none shadow-none outline-none"
+        className="paragraph-regular no-focus placeholder background-light850_darkgradient border-none shadow-none outline-none"
         value={""}
         onChange={() => {}}
       />

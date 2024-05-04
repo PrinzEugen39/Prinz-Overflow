@@ -25,7 +25,7 @@ export default async function Community() {
           otherClasses="min-h-[56px] sm:min-w-[170px]"
         />
       </div>
-      <section className="mt-12 flex flex-wrap gap-4">
+      <section className="mt-12 flex flex-wrap gap-4 justify-center">
         {users.length > 0 ? (
           users?.map((user) => <CommunityCard key={user._id} user={user} />)
         ) : (

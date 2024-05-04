@@ -2,7 +2,11 @@
 
 import Answer from "@/database/answer.model";
 import { connectToDatabase } from "../mongoose";
-import { CreateAnswerParams, GetAllParams } from "./shared.types";
+import {
+  AnswerVoteParams,
+  CreateAnswerParams,
+  GetAllParams,
+} from "./shared.types";
 import Question from "@/database/question.model";
 import { revalidatePath } from "next/cache";
 
@@ -50,5 +54,89 @@ export async function createAnswer({
   } catch (error) {
     console.log(error);
     throw new Error("Error creating answer");
+  }
+}
+
+export async function upvoteAnswer(params: AnswerVoteParams) {
+  try {
+    connectToDatabase();
+
+    const { answerId, userId, hasAlreadyDownvoted, hasAlreadyUpvoted, path } =
+      params;
+
+    console.log(params);
+
+    let updateQuery = {};
+
+    if (hasAlreadyUpvoted) {
+      updateQuery = {
+        $pull: { upvotes: userId },
+      };
+    } else if (hasAlreadyDownvoted) {
+      updateQuery = {
+        $pull: { downvotes: userId },
+        $push: { upvotes: userId },
+      };
+    } else {
+      updateQuery = {
+        $addToSet: { upvotes: userId },
+      };
+    }
+
+    const answer = await Answer.findByIdAndUpdate(answerId, updateQuery, {
+      new: true,
+    });
+
+    if (!answer) {
+      throw new Error("Answer not found");
+    }
+    // Increment author's reputation by +10 for receiving an upvote
+
+    if (path) {
+      revalidatePath(path);
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("An error occurred while voting question");
+  }
+}
+
+export async function downvoteAnswer(params: AnswerVoteParams) {
+  try {
+    connectToDatabase();
+    // console.log(params);
+
+    const { answerId, userId, hasAlreadyDownvoted, hasAlreadyUpvoted, path } =
+      params;
+
+    let updateQuery = {};
+
+    if (hasAlreadyDownvoted) {
+      updateQuery = { $pull: { downvote: userId } };
+    } else if (hasAlreadyUpvoted) {
+      updateQuery = {
+        $pull: { upvotes: userId },
+        $push: { downvotes: userId },
+      };
+    } else {
+      updateQuery = { $addToSet: { downvotes: userId } };
+    }
+
+    const answer = await Answer.findByIdAndUpdate(answerId, updateQuery, {
+      new: true,
+    });
+
+    if (!answer) {
+      throw new Error("Answer not found");
+    }
+
+    // Increment author's reputation by +10 for receiving an upvote
+
+    if (path) {
+      revalidatePath(path);
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("An error occurred while voting question");
   }
 }

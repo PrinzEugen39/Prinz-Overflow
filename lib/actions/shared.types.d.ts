@@ -9,6 +9,7 @@ export interface GetAllParams {
   searchQuery?: string;
 }
 
+/// QUESTION ////
 export interface GetQuestionParams {
   page?: number;
   pageSize?: number;
@@ -59,5 +60,23 @@ export interface CreateAnswerParams {
   content: string;
   author: string; // User ID
   question: string; // Question ID
+  path: string;
+}
+
+/// // VOTE ACTIONS /////
+
+export interface QuestionVoteParams {
+  questionId: string;
+  userId: string;
+  hasAlreadyUpvoted: boolean;
+  hasAlreadyDownvoted: boolean;
+  path: string;
+}
+
+export interface AnswerVoteParams {
+  answerId: string;
+  userId: string;
+  hasAlreadyUpvoted: boolean;
+  hasAlreadyDownvoted: boolean;
   path: string;
 }

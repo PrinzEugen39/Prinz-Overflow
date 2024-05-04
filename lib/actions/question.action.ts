@@ -2,7 +2,11 @@
 import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
 import { connectToDatabase } from "../mongoose";
-import { CreateQuestionParams, GetQuestionParams } from "./shared.types";
+import {
+  CreateQuestionParams,
+  GetQuestionParams,
+  QuestionVoteParams,
+} from "./shared.types";
 import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
 
@@ -93,5 +97,88 @@ export async function createQuestion(params: CreateQuestionParams) {
   } catch (error) {
     console.log(error);
     throw new Error("An error occurred while creating questions");
+  }
+}
+
+export async function upvoteQuestion(params: QuestionVoteParams) {
+  try {
+    connectToDatabase();
+
+    const { questionId, userId, hasAlreadyDownvoted, hasAlreadyUpvoted, path } =
+      params;
+
+    let updateQuery = {};
+
+    if (hasAlreadyUpvoted) {
+      updateQuery = {
+        $pull: { upvotes: userId },
+      };
+    } else if (hasAlreadyDownvoted) {
+      updateQuery = {
+        $pull: { downvotes: userId },
+        $push: { upvotes: userId },
+      };
+    } else {
+      updateQuery = {
+        $addToSet: { upvotes: userId },
+      };
+    }
+
+    const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
+      new: true,
+    });
+
+    if (!question) {
+      throw new Error("Question not found");
+    }
+
+    // Increment author's reputation by +10 for receiving an upvote
+
+    if (path) {
+      revalidatePath(path);
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("An error occurred while voting question");
+  }
+}
+
+export async function downvoteQuestion(params: QuestionVoteParams) {
+  try {
+    connectToDatabase();
+    // console.log(params);
+
+    const { questionId, userId, hasAlreadyDownvoted, hasAlreadyUpvoted, path } =
+      params;
+
+    let updateQuery = {};
+
+    if (hasAlreadyDownvoted) {
+      updateQuery = { $pull: { downvote: userId } };
+    } else if (hasAlreadyUpvoted) {
+      updateQuery = {
+        $pull: { upvotes: userId },
+        $push: { downvotes: userId },
+      };
+    } else {
+      updateQuery = { $addToSet: { downvotes: userId } };
+    }
+
+    const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
+      new: true,
+    });
+
+    if (!question) {
+      throw new Error("Question not found");
+    }
+
+    // Increment author's reputation by +10 for receiving an upvote
+
+    if (path) {
+      revalidatePath(path);
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("An error occurred while voting question");
   }
 }
