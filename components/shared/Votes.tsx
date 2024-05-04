@@ -4,6 +4,7 @@ import {
   downvoteQuestion,
   upvoteQuestion,
 } from "@/lib/actions/question.action";
+import { toggleSaveQuestion } from "@/lib/actions/user.action";
 import { formatNumber } from "@/lib/utils";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -48,7 +49,7 @@ const Votes = ({
           hasAlreadyUpvoted: hasUpVoted,
           path,
         });
-        console.log("upvote question");
+        // console.log("upvote question");
       } else if (type === "answer") {
         await upvoteAnswer({
           answerId: JSON.parse(itemId),
@@ -57,7 +58,7 @@ const Votes = ({
           hasAlreadyUpvoted: hasUpVoted,
           path,
         });
-        console.log("upvote answer");
+        // console.log("upvote answer");
       }
       return;
     }
@@ -70,7 +71,7 @@ const Votes = ({
           hasAlreadyUpvoted: hasUpVoted,
           path,
         });
-        console.log("downvote question");
+        // console.log("downvote question");
       } else if (type === "answer") {
         await downvoteAnswer({
           answerId: JSON.parse(itemId),
@@ -79,13 +80,20 @@ const Votes = ({
           hasAlreadyUpvoted: hasUpVoted,
           path,
         });
-        console.log("downvote answer");
+        // console.log("downvote answer");
       }
     }
   }
 
-  function handleSave() {
-    console.log("save");
+  async function handleSave() {
+    if (type === "question") {
+      await toggleSaveQuestion({
+        path,
+        questionId: JSON.parse(itemId),
+        userId: JSON.parse(userId),
+        hasSaved: hasSaved!,
+      });
+    }
   }
 
   return (

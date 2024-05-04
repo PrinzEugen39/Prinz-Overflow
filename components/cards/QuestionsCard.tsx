@@ -4,7 +4,7 @@ import RenderTags from "../shared/RenderTags";
 import Metric from "../shared/Metric";
 import { formatNumber, getTimestamp } from "@/lib/utils";
 
-type TQuestion = {
+export type TQuestion = {
   _id: number;
   title: string;
   tags: {
@@ -16,7 +16,7 @@ type TQuestion = {
     name: string;
     picture: string;
   };
-  upvotes: number;
+  upvotes: number[];
   views: number;
   answers: Array<object>;
   createdAt: Date;
@@ -66,7 +66,7 @@ const QuestionsCard = ({
         />
         <Metric
           imgUrl="/assets/icons/like.svg"
-          value={formatNumber(upvotes)}
+          value={formatNumber(upvotes.length)}
           alt="upvotes"
           title="Upvotes"
           textStyles="text-dark400_light800 small-medium"

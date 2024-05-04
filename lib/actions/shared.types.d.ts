@@ -49,6 +49,13 @@ export interface DeleteUserParams {
   clerkId: string;
 }
 
+export interface ToggleSaveQuestionParams {
+  userId: string;
+  questionId: string;
+  path: string;
+  hasSaved: boolean;
+}
+
 // TAG ACTIONS //
 export interface GetTopInteractedTagsParams {
   userId: string;

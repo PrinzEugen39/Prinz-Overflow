@@ -26,3 +26,11 @@ export const AnswerFilters: IFilterOptions[] = [
   { name: "Most Recent", value: "recent" },
   { name: "Oldest", value: "old" },
 ];
+
+export const QuestionFilters: IFilterOptions[] = [
+  { name: "Most Recent", value: "most_recent" },
+  { name: "Oldest", value: "oldest" },
+  { name: "Most Voted", value: "most_voted" },
+  { name: "Most Viewed", value: "most_viewed" },
+  { name: "Most Answered", value: "most_answered" },
+];

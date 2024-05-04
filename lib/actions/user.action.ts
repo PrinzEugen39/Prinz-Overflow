@@ -1,5 +1,5 @@
 "use server";
-
+import { FilterQuery } from "mongoose";
 import User from "@/database/user.model";
 import { connectToDatabase } from "../mongoose";
 import {
@@ -7,14 +7,55 @@ import {
   DeleteUserParams,
   GetAllParams,
   GetUserByIdParams,
+  ToggleSaveQuestionParams,
   UpdateUserParams,
 } from "./shared.types";
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
+import Tag from "@/database/tag.model";
+
+export async function getAllSavedQuestion({
+  id,
+  page = 1,
+  pageSize = 10,
+  filter,
+  searchQuery,
+}: GetAllParams) {
+  try {
+    connectToDatabase();
+
+    const query: FilterQuery<typeof Question> = searchQuery
+      ? { title: { $regex: new RegExp(searchQuery, "i") } }
+      : {};
+
+    const user = await User.findOne({ clerkId: id }).populate({
+      path: "saved",
+      match: query,
+      options: {
+        sort: { createdAt: -1 },
+        // skip: pageSize * (page - 1),
+        // limit: pageSize,
+      },
+      populate: [
+        { path: "tags", model: Tag, select: "_id name" },
+        { path: "author", model: User, select: "_id name username picture" },
+      ],
+    });
+
+    if (!user) throw new Error("User not found");
+
+    // console.log(user.saved);
+
+    return user.saved;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
 
 export async function getAllUsers({
   page = 1,
-  pageSize = 20,
+  pageSize = 10,
   filter,
   searchQuery,
 }: GetAllParams) {
@@ -97,5 +138,39 @@ export async function deleteUser(userData: DeleteUserParams) {
   } catch (error) {
     console.log(error);
     throw error;
+  }
+}
+
+export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
+  try {
+    connectToDatabase();
+    const { userId, questionId, path, hasSaved } = params;
+
+    let updateQuery = {};
+
+    if (hasSaved) {
+      updateQuery = {
+        $pull: { saved: questionId },
+      };
+    } else {
+      updateQuery = {
+        $addToSet: { saved: questionId },
+      };
+    }
+
+    const user = await User.findByIdAndUpdate(userId, updateQuery, {
+      new: true,
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (path) {
+      revalidatePath(path);
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("An error occurred while saving question");
   }
 }
