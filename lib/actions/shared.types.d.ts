@@ -87,3 +87,9 @@ export interface AnswerVoteParams {
   hasAlreadyDownvoted: boolean;
   path: string;
 }
+
+/// // INTERACTION ACTIONS /////
+export interface ViewQuestionParams {
+  questionId: string;
+  userId: string | undefined;
+}
