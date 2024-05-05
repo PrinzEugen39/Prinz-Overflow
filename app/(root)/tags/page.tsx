@@ -25,7 +25,7 @@ export default async function Tags() {
           otherClasses="min-h-[56px] sm:min-w-[170px]"
         />
       </div>
-      <section className="mt-12 flex flex-wrap gap-4">
+      <section className="mt-12 flex flex-wrap  gap-4">
         {tags.length > 0 ? (
           tags?.map((tag) => (
             <Link
@@ -33,7 +33,7 @@ export default async function Tags() {
               href={`/tags/${tag._id}`}
               className="shadow-light100_darknone"
             >
-              <article className="background-light900_dark200 light-border border px-8 py-10 flex w-full flex-col rounded-2xl sm:w-[260px]">
+              <article className="background-light900_dark200 light-border border px-8 py-10 flex w-full flex-col rounded-2xl sm:w-[200px]">
                 <div className="background-light800_dark400 w-fit rounded-sm px-5 py-1.5">
                   <p className="paragraph-semibold text-dark300_light900">
                     {tag.name}

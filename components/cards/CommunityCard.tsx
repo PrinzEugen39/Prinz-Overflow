@@ -15,7 +15,6 @@ interface ICommunityCardProps {
   };
 }
 
-
 const CommunityCard = async ({ user }: ICommunityCardProps) => {
   const interactedTags = await GetTopInteractedTags({ userId: user._id });
   return (
@@ -29,7 +28,7 @@ const CommunityCard = async ({ user }: ICommunityCardProps) => {
           alt={"user pfp"}
           width={100}
           height={100}
-          className="rounded-full"
+          className="rounded-full object-cover size-32"
         />
 
         <div className="mt-4 text-center">
