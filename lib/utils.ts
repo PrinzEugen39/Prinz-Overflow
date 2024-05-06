@@ -56,3 +56,5 @@ export const formatNumber = (number: number): string => {
 
   return scaledNumber.toFixed(1) + suffixes[exponent];
 };
+
+

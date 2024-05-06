@@ -16,6 +16,8 @@ export default function Layout({ children }: { children: ReactNode }) {
       setBgColor("background-light800_dark100");
     } else if (route.startsWith("/question")) {
       setBgColor("background-light850_dark100");
+    } else if (route.startsWith("/profile")) {
+      setBgColor("background-light850_dark100");
     } else if (route == "/ask-question") {
       setBgColor("background-light850_dark100");
     } else {

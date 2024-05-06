@@ -32,6 +32,9 @@ body {
   .btn-secondary {
     @apply bg-light-800 dark:bg-dark-400 !important;
   }
+  .btn-secondary2 {
+    @apply bg-light-850 dark:bg-dark-400 !important;
+  }
 
   .btn-tertiary {
     @apply bg-light-700 dark:bg-dark-300 !important;

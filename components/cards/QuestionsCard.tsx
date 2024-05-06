@@ -12,6 +12,7 @@ export type TQuestion = {
     name: string;
   }[];
   author: {
+    clerkId: any;
     _id: number;
     name: string;
     picture: string;
@@ -32,6 +33,8 @@ const QuestionsCard = ({
   createdAt,
   answers,
 }: TQuestion) => {
+  // console.log(author);
+
   return (
     <div className="card-wrapper p-9 sm:px-11 rounded-xl">
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
@@ -61,7 +64,7 @@ const QuestionsCard = ({
           alt="user"
           title={`- asked ${getTimestamp(createdAt)}`}
           textStyles="text-dark400_light700 body-medium"
-          href={`/profile/${author._id}`}
+          href={`/profile/${author.clerkId}`}
           isAuthor
         />
         <Metric
