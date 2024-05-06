@@ -1,21 +1,20 @@
-import { getUserInfo } from "@/lib/actions/user.action";
-import { URLProps } from "@/types";
-import { ObjectId } from "mongodb";
-import Image from "next/image";
-import React from "react";
-import moment from "moment";
-import { SignedIn, auth } from "@clerk/nextjs";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import UserTopAnswersTab from "@/components/profile/UserTopAnswersTab";
+import UserTopPostsTab from "@/components/profile/UserTopPostsTab";
 import ProfileLinks from "@/components/shared/ProfileLinks";
 import Stats from "@/components/shared/Stats";
-import PostsTab from "@/components/profile/PostsTab";
-import AnswersTab from "@/components/profile/AnswerTab";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getUserInfo } from "@/lib/actions/user.action";
+import { URLProps } from "@/types";
+import { SignedIn, auth } from "@clerk/nextjs";
+import moment from "moment";
+// import { ObjectId } from "mongodb";
+import Image from "next/image";
+import Link from "next/link";
 
 type TUserInfo = {
   user: {
-    _id: ObjectId;
+    _id: string;
     clerkId: string;
     name: string;
     bio?: string;
@@ -33,7 +32,7 @@ type TUserInfo = {
   totalAnswer: number;
 };
 
-const ProfileDetails = async ({ params }: URLProps) => {
+const ProfileDetails = async ({ params, searchParams }: URLProps) => {
   const { userId: clerkId } = auth();
   const userInfo: TUserInfo = await getUserInfo({ userId: params.id });
 
@@ -119,10 +118,18 @@ const ProfileDetails = async ({ params }: URLProps) => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="top-posts">
-            <PostsTab />
+            <UserTopPostsTab
+              searchParams={searchParams}
+              userId={userInfo.user._id}
+              clerkId={clerkId}
+            />
           </TabsContent>
           <TabsContent value="answers">
-            <AnswersTab />
+            <UserTopAnswersTab
+              searchParams={searchParams}
+              userId={userInfo.user._id}
+              clerkId={clerkId}
+            />
           </TabsContent>
         </Tabs>
       </div>

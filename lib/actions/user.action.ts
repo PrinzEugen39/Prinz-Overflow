@@ -197,3 +197,46 @@ export async function getUserInfo(params: GetUserByIdParams) {
     throw error;
   }
 }
+
+export async function getUserQuestions(params: GetAllParams) {
+  try {
+    connectToDatabase();
+
+    const { id } = params;
+
+    const totalAnswers = await Answer.countDocuments({ author: id });
+
+    const userQuestion = await Question.find({ author: id })
+      .sort({
+        views: -1,
+        upvotes: -1,
+      })
+      .populate("tags", "_id name")
+      .populate("author", "_id name clerkId picture");
+
+    return { totalAnswers, question: userQuestion };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getUserAnswers(params: GetAllParams) {
+  try {
+    connectToDatabase();
+
+    const { id } = params;
+
+    const totalAnswers = await Answer.countDocuments({ author: id });
+
+    const userAnswer = await Answer.find({ author: id })
+      .sort({ upvotes: -1 })
+      .populate("question", "_id title")
+      .populate("author", "_id name clerkId picture");
+
+    return { totalAnswers, answers: userAnswer };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}

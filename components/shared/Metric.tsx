@@ -25,9 +25,9 @@ const Metric = ({
       <Image
         src={imgUrl}
         alt={alt}
-        width={16}
-        height={16}
-        className={`${href ? "rounded-full object-fill size-7" : " object-contain "}`}
+        width={100}
+        height={100}
+        className={`${href ? "rounded-full object-fill size-7" : " object-contain size-4"}`}
       />
 
       <p

@@ -26,8 +26,8 @@ const CommunityCard = async ({ user }: ICommunityCardProps) => {
         <Image
           src={user.picture}
           alt={"user pfp"}
-          width={100}
-          height={100}
+          width={240}
+          height={240}
           className="rounded-full object-cover size-32"
         />
 

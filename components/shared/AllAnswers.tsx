@@ -31,28 +31,32 @@ const AllAnswers = async ({
       </div>
       <div>
         {result?.map((answer) => (
-          <article key={answer._id} className="light-border border-b py-10">
+          <article
+            key={answer._id}
+            className="light-border border-b py-10"
+          >
             <div className="flex items-center justify-between">
               <div className="mb-2 flex flex-col-reverse w-full sm:justify-between gap-5 sm:flex-row sm:items-center sm:gap-2 sm:flex-1 sm:mb-8">
-              <Link
-                href={`/profile/${answer.author.clerkId}`}
-                className="flex flex-1 items-start gap-1 sm:items-center">
-                <Image
-                  src={answer.author.picture}
-                  width={18}
-                  height={18}
-                  alt="profile"
-                  className="rounded-full object-cover max-sm:mt-0.5"
-                />
-                <div className="flex flex-col gap-1 sm:flex-row sm:items-center">
-                  <p className="body-semibold text-dark300_light700">
-                    {answer.author.name}
-                  </p>
-                  <p className="small-regular text-light400_light500 ml-0.5 line-clamp-1">
-                    • answered {getTimestamp(answer.createdAt)}
-                  </p>
-                </div>
-              </Link>
+                <Link
+                  href={`/profile/${answer.author.clerkId}`}
+                  className="flex flex-1 items-start gap-1 sm:items-center"
+                >
+                  <Image
+                    src={answer.author.picture}
+                    width={64}
+                    height={64}
+                    alt="profile"
+                    className="rounded-full object-cover max-sm:mt-0.5 size-5"
+                  />
+                  <div className="flex flex-col gap-1 sm:flex-row sm:items-center">
+                    <p className="body-semibold text-dark300_light700">
+                      {answer.author.name}
+                    </p>
+                    <p className="small-regular text-light400_light500 ml-0.5 line-clamp-1">
+                      • answered {getTimestamp(answer.createdAt)}
+                    </p>
+                  </div>
+                </Link>
 
                 <div className="flex w-full sm:w-auto justify-end">
                   <Votes

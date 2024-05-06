@@ -60,9 +60,9 @@ const QuestionDetails = async ({ params }: ParamsProps) => {
           >
             <Image
               src={question.author.picture}
-              className="rounded-full"
-              width={32}
-              height={32}
+              className="rounded-full size-8 object-cover"
+              width={100}
+              height={100}
               alt="profile"
             />
             <p className="paragraph-semibold text-dark300_light700">

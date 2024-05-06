@@ -3,10 +3,13 @@ import React from "react";
 import RenderTags from "../shared/RenderTags";
 import Metric from "../shared/Metric";
 import { formatNumber, getTimestamp } from "@/lib/utils";
+import { SignedIn } from "@clerk/nextjs";
+import { Button } from "../ui/button";
 
 export type TQuestion = {
   _id: number;
   title: string;
+  content?: string;
   tags: {
     _id: number;
     name: string;
@@ -21,6 +24,7 @@ export type TQuestion = {
   views: number;
   answers: Array<object>;
   createdAt: Date;
+  clerkId?: string | null;
 };
 
 const QuestionsCard = ({
@@ -32,7 +36,10 @@ const QuestionsCard = ({
   views,
   createdAt,
   answers,
+  clerkId,
 }: TQuestion) => {
+  const showActionButtons = clerkId && clerkId === author.clerkId;
+
   // console.log(author);
 
   return (
@@ -49,6 +56,7 @@ const QuestionsCard = ({
           </Link>
         </div>
         {/* if signed in add edit delet action */}
+        <SignedIn>{showActionButtons && <Button>EDIT DELETE</Button>}</SignedIn>
       </div>
 
       <div className="mt-3.5 flex flex-wrap gap-2">
