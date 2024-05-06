@@ -18,29 +18,36 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
-import { createQuestion } from "@/lib/actions/question.action";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "@/context/ThemeProvider";
 
 type TQuestion = {
   mongoUserId: string;
+  type?: "create" | "edit";
+  questionDetails?: string;
 };
 
-const type: any = "create";
-
-const QuestionForm = ({ mongoUserId }: TQuestion) => {
+const QuestionForm = ({ mongoUserId, type, questionDetails }: TQuestion) => {
   const { mode } = useTheme();
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
+  const parsedQuestionDetails = questionDetails
+    ? JSON.parse(questionDetails)
+    : "";
+  const groupedTags = parsedQuestionDetails
+    ? parsedQuestionDetails.tags.map((tag: any) => tag.name)
+    : [];
+
   const form = useForm<z.infer<typeof QuestionsSchema>>({
     resolver: zodResolver(QuestionsSchema),
     defaultValues: {
-      title: "",
-      body: "",
-      tags: [],
+      title: parsedQuestionDetails?.title || "",
+      body: parsedQuestionDetails?.content || "",
+      tags: groupedTags || [],
     },
   });
 
@@ -48,18 +55,29 @@ const QuestionForm = ({ mongoUserId }: TQuestion) => {
   async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     setIsSubmitting(true);
     try {
-      // make an async call to your API -> create a question
-      await createQuestion({
-        title: values.title,
-        content: values.body,
-        tags: values.tags,
-        author: JSON.parse(mongoUserId),
-        path: pathname,
-      });
+      if (type === "edit") {
+        await editQuestion({
+          id: parsedQuestionDetails._id,
+          title: values.title,
+          content: values.body,
+          path: pathname,
+        });
 
-      // navigate to home page
-      router.push("/");
-      // console.log(values);
+        router.push(`/questions/${parsedQuestionDetails._id}`);
+      } else {
+        // make an async call to your API -> create a question
+        await createQuestion({
+          title: values.title,
+          content: values.body,
+          tags: values.tags,
+          author: JSON.parse(mongoUserId),
+          path: pathname,
+        });
+
+        // navigate to home page
+        router.push("/");
+        // console.log(values);
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -128,8 +146,11 @@ const QuestionForm = ({ mongoUserId }: TQuestion) => {
                   />
                 </FormControl>
                 <FormDescription className="body-regular mt-2.5 text-light-500">
-                  Be specific and imagine you&apos;re asking a question to
-                  another person.
+                  {type === "create" &&
+                    "Be specific and imagine you&apos;re asking a question to another person."}
+
+                  {type === "edit" &&
+                    "You're editing a question. Make sure to provide a clear and concise title."}
                 </FormDescription>
                 <FormMessage className="text-red-500" />
               </FormItem>
@@ -154,7 +175,7 @@ const QuestionForm = ({ mongoUserId }: TQuestion) => {
                     }}
                     onBlur={field.onBlur}
                     onEditorChange={(content) => field.onChange(content)}
-                    initialValue=""
+                    initialValue={parsedQuestionDetails?.content || ""}
                     init={{
                       height: 350,
                       menubar: false,
@@ -207,6 +228,7 @@ const QuestionForm = ({ mongoUserId }: TQuestion) => {
                 <FormControl className="mt-3.5">
                   <>
                     <Input
+                      disabled={type === "edit"}
                       className="no-focus paragraph-regular background-light900_dark300 border light-border-2 text-dark300_light700 min-h-[56px] "
                       onKeyDown={(e) => handleInputKeyDown(e, field)}
                       placeholder="Add tags..."
@@ -219,14 +241,16 @@ const QuestionForm = ({ mongoUserId }: TQuestion) => {
                             className="subtle-medium background-light800_dark300 text-light400_light500 flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 capitalize"
                           >
                             {tag}{" "}
-                            <Image
-                              src={"/assets/icons/close.svg"}
-                              alt="close"
-                              width={12}
-                              height={12}
-                              className="cursor-pointer object-contain invert-0 dark:invert"
-                              onClick={() => handleTagRemove(tag, field)}
-                            />
+                            {type === "create" && (
+                              <Image
+                                src={"/assets/icons/close.svg"}
+                                alt="close"
+                                width={12}
+                                height={12}
+                                className="cursor-pointer object-contain invert-0 dark:invert"
+                                onClick={() => handleTagRemove(tag, field)}
+                              />
+                            )}
                           </Badge>
                         ))}
                       </div>

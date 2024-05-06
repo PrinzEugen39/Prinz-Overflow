@@ -1,13 +1,12 @@
-import Link from "next/link";
-import React from "react";
-import RenderTags from "../shared/RenderTags";
-import Metric from "../shared/Metric";
 import { formatNumber, getTimestamp } from "@/lib/utils";
 import { SignedIn } from "@clerk/nextjs";
-import { Button } from "../ui/button";
+import Link from "next/link";
+import EditDeleteComponent from "../shared/EditDeleteComponent";
+import Metric from "../shared/Metric";
+import RenderTags from "../shared/RenderTags";
 
 export type TQuestion = {
-  _id: number;
+  _id: string;
   title: string;
   content?: string;
   tags: {
@@ -56,7 +55,11 @@ const QuestionsCard = ({
           </Link>
         </div>
         {/* if signed in add edit delet action */}
-        <SignedIn>{showActionButtons && <Button>EDIT DELETE</Button>}</SignedIn>
+        <SignedIn>
+          {showActionButtons && (
+            <EditDeleteComponent type="question" itemId={JSON.stringify(_id)} />
+          )}
+        </SignedIn>
       </div>
 
       <div className="mt-3.5 flex flex-wrap gap-2">

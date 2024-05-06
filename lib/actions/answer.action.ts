@@ -1,14 +1,16 @@
 "use server";
 
 import Answer from "@/database/answer.model";
+import Interaction from "@/database/interaction.model";
+import Question from "@/database/question.model";
+import { revalidatePath } from "next/cache";
 import { connectToDatabase } from "../mongoose";
 import {
   AnswerVoteParams,
   CreateAnswerParams,
+  DeleteParams,
   GetAllParams,
 } from "./shared.types";
-import Question from "@/database/question.model";
-import { revalidatePath } from "next/cache";
 
 export async function getAnswers(params: GetAllParams) {
   try {
@@ -54,6 +56,34 @@ export async function createAnswer({
   } catch (error) {
     console.log(error);
     throw new Error("Error creating answer");
+  }
+}
+
+export async function deleteAnswer(params: DeleteParams) {
+  try {
+    connectToDatabase();
+
+    const { id, path } = params;
+
+    const answer = await Answer.findById(id);
+
+    if (!answer) {
+      throw new Error("Answer not found");
+    }
+
+    await answer.deleteOne({ _id: id });
+    await Question.updateMany(
+      { _id: answer.question },
+      { $pull: { answers: id } }
+    );
+    await Interaction.deleteMany({ answer: id });
+
+    if (path) {
+      revalidatePath(path);
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("An error occurred while deleting questions");
   }
 }
 

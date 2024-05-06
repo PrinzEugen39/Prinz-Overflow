@@ -1,14 +1,18 @@
 "use server";
+import Answer from "@/database/answer.model";
+import Interaction from "@/database/interaction.model";
 import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
+import User from "@/database/user.model";
+import { revalidatePath } from "next/cache";
 import { connectToDatabase } from "../mongoose";
 import {
   CreateQuestionParams,
+  DeleteParams,
+  EditQuestionParams,
   GetQuestionParams,
   QuestionVoteParams,
 } from "./shared.types";
-import User from "@/database/user.model";
-import { revalidatePath } from "next/cache";
 
 export async function getQuestions(params: GetQuestionParams) {
   try {
@@ -97,6 +101,52 @@ export async function createQuestion(params: CreateQuestionParams) {
   } catch (error) {
     console.log(error);
     throw new Error("An error occurred while creating questions");
+  }
+}
+
+export async function editQuestion(params: EditQuestionParams) {
+  try {
+    connectToDatabase();
+
+    const { id, path, content, title } = params;
+
+    const question = await Question.findById(id).populate("tags");
+
+    if (!question) {
+      throw new Error("Question not found");
+    }
+
+    question.title = title;
+    question.content = content;
+
+    await question.save();
+
+    if (path) {
+      revalidatePath(path);
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("An error occurred while deleting questions");
+  }
+}
+
+export async function deleteQuestion(params: DeleteParams) {
+  try {
+    connectToDatabase();
+
+    const { id, path } = params;
+
+    await Question.deleteOne({ _id: id });
+    await Answer.deleteMany({ question: id });
+    await Interaction.deleteMany({ question: id });
+    await Tag.updateMany({ questions: id }, { $pull: { questions: id } });
+
+    if (path) {
+      revalidatePath(path);
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("An error occurred while deleting questions");
   }
 }
 

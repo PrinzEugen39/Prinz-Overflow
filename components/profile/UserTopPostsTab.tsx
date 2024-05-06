@@ -20,7 +20,7 @@ const UserTopPostsTab = async ({
   // console.log("TOP POSTS:", result);
 
   return (
-    <>
+    <div className="flex flex-col gap-3">
       {result?.question.map((item) => (
         <QuestionsCard
           key={item._id}
@@ -36,7 +36,7 @@ const UserTopPostsTab = async ({
           clerkId={clerkId}
         />
       ))}
-    </>
+    </div>
   );
 };
 

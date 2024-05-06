@@ -9,6 +9,11 @@ export interface GetAllParams {
   searchQuery?: string;
 }
 
+export interface DeleteParams {
+  id: string;
+  path?: string;
+}
+
 /// QUESTION ////
 export interface GetQuestionParams {
   page?: number;
@@ -23,6 +28,13 @@ export interface CreateQuestionParams {
   tags: string[];
   author: Schema.Types.ObjectId | IUser;
   path?: string;
+}
+
+export interface EditQuestionParams {
+  id: string;
+  title: string;
+  content: string;
+  path: string;
 }
 
 /// // USER ACTIONS /////
