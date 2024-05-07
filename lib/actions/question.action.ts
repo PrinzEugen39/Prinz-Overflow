@@ -232,3 +232,16 @@ export async function downvoteQuestion(params: QuestionVoteParams) {
     throw new Error("An error occurred while voting question");
   }
 }
+
+export async function getHotQuestions() {
+  try {
+    connectToDatabase();
+    const hotQuestions = await Question.find({})
+      .sort({ views: -1, upvotes: -1 })
+      .limit(5);
+    return hotQuestions
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}

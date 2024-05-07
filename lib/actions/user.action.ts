@@ -240,3 +240,18 @@ export async function getUserAnswers(params: GetAllParams) {
     throw error;
   }
 }
+
+export async function updateUserProfile(params: UpdateUserParams) {
+  try {
+    connectToDatabase();
+
+    const { clerkId, updateData, path } = params;
+
+    await User.findOneAndUpdate({ clerkId }, updateData, { new: true });
+
+    if (path) revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}

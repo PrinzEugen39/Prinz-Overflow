@@ -17,7 +17,9 @@ const ProfileLinks = ({ imgUrl, href, text }: IProfileLinks) => {
           href={href}
           target="_blank"
           className="text-blue-500 paragraph-medium"
-        ></Link>
+        >
+          <p className="paragraph-medium text-blue-400/90">{text}</p>
+        </Link>
       ) : (
         <p className="paragraph-medium text-dark400_light700">{text}</p>
       )}

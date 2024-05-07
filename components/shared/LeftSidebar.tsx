@@ -34,8 +34,8 @@ export default function LeftSidebar() {
               className={`${
                 isActive
                   ? "primary-gradient rounded-lg text-light-900"
-                  : "text-dark300_light900"
-              } flex items-center justify-normal gap-4 bg-transparent p-4 active:scale-95 transition ease-in-out`}
+                  : "text-dark300_light900 hover:primary-gradient-hover hover:rounded-lg"
+              } flex items-center justify-normal gap-4 bg-transparent p-4 active:scale-95 transition ease-in-out `}
             >
               <Image
                 src={link.imgURL}
