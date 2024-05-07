@@ -32,7 +32,7 @@ function NavContent() {
                 isActive
                   ? "primary-gradient rounded-lg text-light-900"
                   : "text-dark300_light900"
-              } flex items-center justify-normal gap-4 bg-transparent p-3`}
+              } flex items-center justify-normal gap-4 bg-transparent p-3 active:scale-95 transition ease-in-out`}
             >
               <Image
                 src={link.imgURL}
@@ -41,7 +41,9 @@ function NavContent() {
                 height={20}
                 className={`${isActive ? "" : "invert-colors"}`}
               />
-              <p className={`${isActive ? "base-bold" : "base-medium"}`}>{link.label}</p>
+              <p className={`${isActive ? "base-bold" : "base-medium"}`}>
+                {link.label}
+              </p>
             </Link>
           </SheetClose>
         );

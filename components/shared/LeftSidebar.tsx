@@ -35,7 +35,7 @@ export default function LeftSidebar() {
                 isActive
                   ? "primary-gradient rounded-lg text-light-900"
                   : "text-dark300_light900"
-              } flex items-center justify-normal gap-4 bg-transparent p-4`}
+              } flex items-center justify-normal gap-4 bg-transparent p-4 active:scale-95 transition ease-in-out`}
             >
               <Image
                 src={link.imgURL}
@@ -58,7 +58,7 @@ export default function LeftSidebar() {
       <SignedOut>
         <div className="flex flex-col gap-3">
           <Link href={"/sign-in"}>
-            <Button className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
+            <Button className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none active:scale-95 transition ease-in-out">
               <Image
                 src="/assets/icons/account.svg"
                 alt="login"
@@ -73,7 +73,7 @@ export default function LeftSidebar() {
           </Link>
 
           <Link href={"/sign-up"}>
-            <Button className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
+            <Button className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none active:scale-95 transition ease-in-out">
               <Image
                 src="/assets/icons/sign-up.svg"
                 alt="signup"

@@ -34,8 +34,8 @@ const NoResult = ({ title, description, link, linkTitle }: TNoResult) => {
       </p>
 
       <Link href={link}>
-        <Button className="paragraph-medium mt-5 min-h-[46px] rounded-lg primary-gradient px-4 py-3 !text-light-900 ">
-         {linkTitle}
+        <Button className="paragraph-medium mt-5 min-h-[46px] rounded-lg primary-gradient px-4 py-3 !text-light-900 active:scale-95 transition ease-in-out">
+          {linkTitle}
         </Button>
       </Link>
     </div>
