@@ -3,11 +3,14 @@ import NoResult from "@/components/shared/NoResult";
 import LocalSearch from "@/components/shared/search/LocalSearch";
 import { TagFilters } from "@/constants/filters";
 import { getAllTags } from "@/lib/actions/tag.action";
+import { SearchParamsProps } from "@/types";
 import Link from "next/link";
 import React from "react";
 
-export default async function Tags() {
-  const tags = await getAllTags({});
+export default async function Tags({ searchParams }: SearchParamsProps) {
+  const tags = await getAllTags({
+    searchQuery: searchParams.search,
+  });
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">All Tags</h1>
@@ -17,7 +20,7 @@ export default async function Tags() {
           route="/tags"
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
-          placeholder="Search for tgas"
+          placeholder="Search for tags"
           otherClasses="flex-1"
         />
         <Filter

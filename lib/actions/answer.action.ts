@@ -21,7 +21,7 @@ export async function getAnswers(params: GetAllParams) {
     if (id) {
       const answers = await Answer.find({ question: JSON.parse(id) })
         .populate("author", "_id clerkId name picture")
-        .sort({ createdAt: -1 });
+        .sort({ createdAt: 1 });
 
       return answers;
     }

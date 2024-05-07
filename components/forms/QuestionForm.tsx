@@ -147,7 +147,7 @@ const QuestionForm = ({ mongoUserId, type, questionDetails }: TQuestion) => {
                 </FormControl>
                 <FormDescription className="body-regular mt-2.5 text-light-500">
                   {type === "create" &&
-                    "Be specific and imagine you&apos;re asking a question to another person."}
+                    "Be specific and imagine you're asking a question to another person."}
 
                   {type === "edit" &&
                     "You're editing a question. Make sure to provide a clear and concise title."}

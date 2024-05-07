@@ -3,10 +3,13 @@ import Filter from "@/components/shared/Filter";
 import LocalSearch from "@/components/shared/search/LocalSearch";
 import { UserFilters } from "@/constants/filters";
 import { getAllUsers } from "@/lib/actions/user.action";
+import { SearchParamsProps } from "@/types";
 import Link from "next/link";
 
-export default async function Community() {
-  const users = await getAllUsers({});
+export default async function Community({ searchParams }: SearchParamsProps) {
+  const users = await getAllUsers({
+    searchQuery: searchParams.search,
+  });
 
   return (
     <>

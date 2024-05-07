@@ -8,9 +8,12 @@ import { HomePageFilters } from "@/constants/filters";
 // import { questions } from "@/constants/mocks";
 import Link from "next/link";
 import { getQuestions } from "@/lib/actions/question.action";
+import { SearchParamsProps } from "@/types";
 
-export default async function Home() {
-  const result = await getQuestions({});
+export default async function Home({ searchParams }: SearchParamsProps) {
+  const result = await getQuestions({
+    searchQuery: searchParams.search,
+  });
 
   return (
     <>

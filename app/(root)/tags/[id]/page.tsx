@@ -13,7 +13,7 @@ const TagDetails = async ({
   const result = await getQuestionsByTagId({
     id: params.id,
     page: 1,
-    searchQuery: searchParams.q,
+    searchQuery: searchParams.search,
   });
 
   // console.log(result);
@@ -24,7 +24,7 @@ const TagDetails = async ({
 
       <div className="mt-11 w-full">
         <LocalSearch
-          route="/"
+          route={`/tags/${params.id}`}
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
           placeholder="Search for questions"

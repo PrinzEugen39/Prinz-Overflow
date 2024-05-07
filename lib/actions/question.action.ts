@@ -13,12 +13,24 @@ import {
   GetQuestionParams,
   QuestionVoteParams,
 } from "./shared.types";
+import { FilterQuery } from "mongoose";
 
 export async function getQuestions(params: GetQuestionParams) {
   try {
     connectToDatabase();
 
-    const questions = await Question.find({})
+    const { searchQuery } = params;
+
+    const query: FilterQuery<typeof Question> = {};
+
+    if (searchQuery) {
+      query.$or = [
+        { title: { $regex: new RegExp(searchQuery, "i") } },
+        { content: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+
+    const questions = await Question.find(query)
       .populate({
         path: "tags",
         model: Tag,
@@ -239,7 +251,7 @@ export async function getHotQuestions() {
     const hotQuestions = await Question.find({})
       .sort({ views: -1, upvotes: -1 })
       .limit(5);
-    return hotQuestions
+    return hotQuestions;
   } catch (error) {
     console.error(error);
     throw error;

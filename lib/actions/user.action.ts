@@ -25,6 +25,9 @@ export async function getAllSavedQuestion({
   try {
     connectToDatabase();
 
+    // console.log(searchQuery);
+    
+
     const query: FilterQuery<typeof Question> = searchQuery
       ? { title: { $regex: new RegExp(searchQuery, "i") } }
       : {};
@@ -62,8 +65,16 @@ export async function getAllUsers({
 }: GetAllParams) {
   try {
     connectToDatabase();
+    // console.log(searchQuery);
 
-    const users = await User.find({}).sort({ createdAt: -1 });
+    const query: FilterQuery<typeof User> = {};
+    if (searchQuery) {
+      query.$or = [
+        { name: { $regex: new RegExp(searchQuery, "i") } },
+        { username: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+    const users = await User.find(query).sort({ createdAt: -1 });
 
     return users;
   } catch (error) {

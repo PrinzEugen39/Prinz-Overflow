@@ -16,7 +16,11 @@ export async function getAllTags({
   try {
     connectToDatabase();
 
-    const tags = await Tag.find({})
+    const query: FilterQuery<typeof Tag> = searchQuery
+      ? { name: { $regex: new RegExp(searchQuery, "i") } }
+      : {};
+
+    const tags = await Tag.find(query)
       .sort({ createdAt: -1 })
       .populate("questions");
 
