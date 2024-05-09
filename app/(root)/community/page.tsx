@@ -9,6 +9,7 @@ import Link from "next/link";
 export default async function Community({ searchParams }: SearchParamsProps) {
   const users = await getAllUsers({
     searchQuery: searchParams.search,
+    filter: searchParams.filter,
   });
 
   return (

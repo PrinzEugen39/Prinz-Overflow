@@ -5,7 +5,6 @@ import QuestionsCard from "@/components/cards/QuestionsCard";
 import LocalSearch from "@/components/shared/search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
-// import { questions } from "@/constants/mocks";
 import Link from "next/link";
 import { getQuestions } from "@/lib/actions/question.action";
 import { SearchParamsProps } from "@/types";
@@ -13,7 +12,10 @@ import { SearchParamsProps } from "@/types";
 export default async function Home({ searchParams }: SearchParamsProps) {
   const result = await getQuestions({
     searchQuery: searchParams.search,
+    filter: searchParams.filter,
   });
+
+  // Fetch Recommended Questions
 
   return (
     <>

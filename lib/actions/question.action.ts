@@ -19,7 +19,10 @@ export async function getQuestions(params: GetQuestionParams) {
   try {
     connectToDatabase();
 
-    const { searchQuery } = params;
+    const { searchQuery, filter } = params;
+
+    // console.log(filter);
+    
 
     const query: FilterQuery<typeof Question> = {};
 
@@ -28,6 +31,29 @@ export async function getQuestions(params: GetQuestionParams) {
         { title: { $regex: new RegExp(searchQuery, "i") } },
         { content: { $regex: new RegExp(searchQuery, "i") } },
       ];
+    }
+
+    let sortOptions = {};
+
+    switch (filter) {
+      case "newest":
+        sortOptions = { createdAt: -1 };
+        break;
+      case "recommended":
+        console.log("Recommended questions");
+        break;
+      case "oldest":
+        sortOptions = { createdAt: 1 };
+        break;
+      case "unanswered":
+        query.answers = { $size: 0 };
+        break;
+      case "frequent":
+        sortOptions = { views: -1 };
+        break;
+      default:
+        sortOptions = { createdAt: -1 };
+        break;
     }
 
     const questions = await Question.find(query)
@@ -39,7 +65,7 @@ export async function getQuestions(params: GetQuestionParams) {
         path: "author",
         model: User,
       })
-      .sort({ createdAt: -1 });
+      .sort(sortOptions);
 
     return { questions };
   } catch (error) {

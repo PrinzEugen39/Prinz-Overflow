@@ -17,7 +17,7 @@ export default function GlobalSearch() {
           type="text"
           placeholder="Search globally..."
           // value=""
-          className="paragraph-regular no-focus background-light800_darkgradient placeholder border-none shadow-none outline-none"
+          className="paragraph-regular text-dark-300 dark:text-light-900 no-focus background-light800_darkgradient placeholder border-none shadow-none outline-none"
         />
       </div>
     </div>

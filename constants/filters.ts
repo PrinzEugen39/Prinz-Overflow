@@ -5,6 +5,7 @@ export const HomePageFilters: IFilterOptions[] = [
   { name: "Recommended", value: "recommended" },
   { name: "Frequent", value: "frequent" },
   { name: "Unanswered", value: "unanswered" },
+  { name: "Oldest", value: "oldest" },
 ];
 
 export const UserFilters: IFilterOptions[] = [
