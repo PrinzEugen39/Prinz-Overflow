@@ -6,9 +6,10 @@ import Link from "next/link";
 import Filter from "./Filter";
 import ParseHTML from "./ParseHTML";
 import Votes from "./Votes";
+import NotLoggedInVotes from "./notLoggedInVotes";
 
 interface IAnswerProps {
-  authorId: string;
+  authorId: string | null;
   questionId: string;
   totalAnswers: number;
   page?: string;
@@ -61,17 +62,25 @@ const AllAnswers = async ({
                   </div>
                 </Link>
 
-                <div className="flex w-full sm:w-auto justify-end">
-                  <Votes
-                    type="answer"
+                {authorId ? (
+                  <div className="flex w-full sm:w-auto justify-end">
+                    <Votes
+                      type="answer"
+                      itemId={JSON.stringify(answer._id)}
+                      userId={JSON.stringify(authorId)}
+                      upvotes={answer.upvotes.length}
+                      downvotes={answer.downvotes.length}
+                      hasUpVoted={answer.upvotes.includes(authorId)}
+                      hasDownVoted={answer.downvotes.includes(authorId)}
+                    />
+                  </div>
+                ) : (
+                  <NotLoggedInVotes
                     itemId={JSON.stringify(answer._id)}
-                    userId={JSON.stringify(authorId)}
                     upvotes={answer.upvotes.length}
                     downvotes={answer.downvotes.length}
-                    hasUpVoted={answer.upvotes.includes(authorId)}
-                    hasDownVoted={answer.downvotes.includes(authorId)}
                   />
-                </div>
+                )}
               </div>
             </div>
             <ParseHTML data={answer.content} />

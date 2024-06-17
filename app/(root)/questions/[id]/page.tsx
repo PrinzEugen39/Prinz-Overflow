@@ -4,6 +4,7 @@ import Metric from "@/components/shared/Metric";
 import ParseHTML from "@/components/shared/ParseHTML";
 import RenderTags from "@/components/shared/RenderTags";
 import Votes from "@/components/shared/Votes";
+import NotLoggedInVotes from "@/components/shared/notLoggedInVotes";
 import { getQuestionById } from "@/lib/actions/question.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { formatNumber, getTimestamp } from "@/lib/utils";
@@ -69,18 +70,26 @@ const QuestionDetails = async ({ params, searchParams }: URLProps) => {
             </p>
           </Link>
 
-          <div className="flex justify-end">
-            <Votes
-              type="question"
+          {currentUser ? (
+            <div className="flex justify-end">
+              <Votes
+                type="question"
+                itemId={JSON.stringify(question._id)}
+                userId={JSON.stringify(currentUser._id)}
+                upvotes={question.upvotes.length}
+                downvotes={question.downvotes.length}
+                hasUpVoted={question.upvotes.includes(currentUser._id)}
+                hasDownVoted={question.downvotes.includes(currentUser._id)}
+                hasSaved={currentUser?.saved.includes(question._id)}
+              />
+            </div>
+          ) : (
+            <NotLoggedInVotes
               itemId={JSON.stringify(question._id)}
-              userId={JSON.stringify(currentUser._id)}
               upvotes={question.upvotes.length}
               downvotes={question.downvotes.length}
-              hasUpVoted={question.upvotes.includes(currentUser._id)}
-              hasDownVoted={question.downvotes.includes(currentUser._id)}
-              hasSaved={currentUser?.saved.includes(question._id)}
             />
-          </div>
+          )}
         </div>
 
         <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full text-left">
@@ -127,17 +136,19 @@ const QuestionDetails = async ({ params, searchParams }: URLProps) => {
 
       <AllAnswers
         questionId={JSON.stringify(question._id)}
-        authorId={currentUser._id}
+        authorId={currentUser ? currentUser._id : null}
         totalAnswers={question.answers.length}
         page={searchParams?.page}
         filter={searchParams?.filter}
       />
 
-      <AnswerForm
-        authorId={JSON.stringify(currentUser._id)}
-        question={question.content}
-        questionId={JSON.stringify(question._id)}
-      />
+      {currentUser && (
+        <AnswerForm
+          authorId={JSON.stringify(currentUser._id)}
+          question={question.content}
+          questionId={JSON.stringify(question._id)}
+        />
+      )}
     </>
   );
 };
