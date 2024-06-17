@@ -11,7 +11,7 @@ interface IAnswerProps {
   authorId: string;
   questionId: string;
   totalAnswers: number;
-  page?: number;
+  page?: string;
   pageSize?: number;
   filter?: string;
 }
@@ -20,8 +20,14 @@ const AllAnswers = async ({
   authorId,
   questionId,
   totalAnswers,
+  filter,
+  page,
 }: IAnswerProps) => {
-  const result = await getAnswers({ id: questionId });
+  const result = await getAnswers({
+    id: questionId,
+    page: page ? Number(page) : 1,
+    filter,
+  });
 
   return (
     <div className="mt-11">

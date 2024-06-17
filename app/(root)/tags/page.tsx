@@ -1,3 +1,4 @@
+import CustomPagination from "@/components/shared/CustomPagination";
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
 import LocalSearch from "@/components/shared/search/LocalSearch";
@@ -8,9 +9,12 @@ import Link from "next/link";
 import React from "react";
 
 export default async function Tags({ searchParams }: SearchParamsProps) {
-  const tags = await getAllTags({
+  const { tags, isNext, totalPages } = await getAllTags({
     searchQuery: searchParams.search,
+    filter: searchParams.filter,
+    page: searchParams.page ? +searchParams.page : 1,
   });
+
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">All Tags</h1>
@@ -28,30 +32,41 @@ export default async function Tags({ searchParams }: SearchParamsProps) {
           otherClasses="min-h-[56px] sm:min-w-[170px]"
         />
       </div>
-      <section className="mt-12 flex flex-wrap  gap-4">
+      <section className="mt-12 flex flex-col">
         {tags.length > 0 ? (
-          tags?.map((tag) => (
-            <Link
-              key={tag._id}
-              href={`/tags/${tag._id}`}
-              className="shadow-light100_darknone active:scale-95 transition ease-in-out"
-            >
-              <article className="background-light900_dark200 light-border border px-8 py-10 flex w-full flex-col rounded-2xl sm:w-[200px]">
-                <div className="background-light800_dark400 w-fit rounded-sm px-5 py-1.5">
-                  <p className="paragraph-semibold text-dark300_light900">
-                    {tag.name}
-                  </p>
-                </div>
+          <>
+            <div className="flex flex-wrap gap-4">
+              {tags?.map((tag) => (
+                <Link
+                  key={tag._id}
+                  href={`/tags/${tag._id}`}
+                  className="shadow-light100_darknone active:scale-[.98] transition ease-in-out"
+                >
+                  <article className="background-light900_dark200 light-border border px-8 py-10 flex w-full flex-col rounded-2xl sm:w-[200px]">
+                    <div className="background-light800_dark400 w-fit rounded-sm px-5 py-1.5">
+                      <p className="paragraph-semibold text-dark300_light900">
+                        {tag.name}
+                      </p>
+                    </div>
 
-                <p className="small-medium text-dark400_light500 mt-3.5">
-                  <span className="body-semibold primary-text-gradient mr-2.5">
-                    {tag.questions.length}+
-                  </span>{" "}
-                  Questions
-                </p>
-              </article>
-            </Link>
-          ))
+                    <p className="small-medium text-dark400_light500 mt-3.5">
+                      <span className="body-semibold primary-text-gradient mr-2.5">
+                        {tag.questions.length}+
+                      </span>{" "}
+                      Questions
+                    </p>
+                  </article>
+                </Link>
+              ))}
+            </div>
+            <div className="mt-12 text-dark100_light900">
+              <CustomPagination
+                currentPage={searchParams?.page ? +searchParams.page : 1}
+                isNext={isNext}
+                totalPages={totalPages}
+              />
+            </div>
+          </>
         ) : (
           <NoResult
             title="No tags Found"

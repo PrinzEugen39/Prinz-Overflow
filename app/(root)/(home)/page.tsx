@@ -1,19 +1,20 @@
-import ExpandedHomeFilters from "@/components/home/ExpandedHomeFilters";
+import QuestionsCard from "@/components/cards/QuestionsCard";
+import CustomPagination from "@/components/shared/CustomPagination";
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
-import QuestionsCard from "@/components/cards/QuestionsCard";
 import LocalSearch from "@/components/shared/search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
-import Link from "next/link";
 import { getQuestions } from "@/lib/actions/question.action";
 import { SearchParamsProps } from "@/types";
+import Link from "next/link";
 
 export default async function Home({ searchParams }: SearchParamsProps) {
   const result = await getQuestions({
     searchQuery: searchParams.search,
     filter: searchParams.filter,
-  });
+    page: searchParams.page ? +searchParams.page : 1,
+  });  
 
   // Fetch Recommended Questions
 
@@ -40,28 +41,37 @@ export default async function Home({ searchParams }: SearchParamsProps) {
         <Filter
           filters={HomePageFilters}
           otherClasses="min-h-[56px] sm:min-w-[170px]"
-          constainerClasses="hidden max-md:flex"
+          constainerClasses="flex"
         />
       </div>
 
       {/* This component only shows on above md breakpoint */}
-      <ExpandedHomeFilters />
+      {/* <ExpandedHomeFilters /> */}
 
       <div className="mt-10 flex w-full flex-col gap-6">
         {result?.questions.length > 0 ? (
-          result.questions.map((question) => (
-            <QuestionsCard
-              key={question._id}
-              _id={question._id}
-              title={question.title}
-              tags={question.tags}
-              author={question.author}
-              upvotes={question.upvotes}
-              views={question.views}
-              createdAt={question.createdAt}
-              answers={question.answers}
-            />
-          ))
+          <>
+            {result.questions.map((question) => (
+              <QuestionsCard
+                key={question._id}
+                _id={question._id}
+                title={question.title}
+                tags={question.tags}
+                author={question.author}
+                upvotes={question.upvotes}
+                views={question.views}
+                createdAt={question.createdAt}
+                answers={question.answers}
+              />
+            ))}
+            <div className="mt-4 text-dark100_light900">
+              <CustomPagination
+                currentPage={searchParams?.page ? +searchParams.page : 1}
+                isNext={result.isNext}
+                totalPages={result.totalPages}
+              />
+            </div>
+          </>
         ) : (
           <NoResult
             title="There's no question to show"

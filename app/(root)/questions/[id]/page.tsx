@@ -1,18 +1,17 @@
-import { getQuestionById } from "@/lib/actions/question.action";
-import { ParamsProps } from "@/types";
-import React from "react";
-import { ObjectId } from "mongodb";
-import Link from "next/link";
-import Image from "next/image";
+import AnswerForm from "@/components/forms/AnswerForm";
+import AllAnswers from "@/components/shared/AllAnswers";
 import Metric from "@/components/shared/Metric";
-import { formatNumber, getTimestamp } from "@/lib/utils";
 import ParseHTML from "@/components/shared/ParseHTML";
 import RenderTags from "@/components/shared/RenderTags";
-import AnswerForm from "@/components/forms/AnswerForm";
-import { auth } from "@clerk/nextjs";
-import { getUserById } from "@/lib/actions/user.action";
-import AllAnswers from "@/components/shared/AllAnswers";
 import Votes from "@/components/shared/Votes";
+import { getQuestionById } from "@/lib/actions/question.action";
+import { getUserById } from "@/lib/actions/user.action";
+import { formatNumber, getTimestamp } from "@/lib/utils";
+import { URLProps } from "@/types";
+import { auth } from "@clerk/nextjs";
+import { ObjectId } from "mongodb";
+import Image from "next/image";
+import Link from "next/link";
 
 interface IAuthor {
   _id: ObjectId;
@@ -40,7 +39,7 @@ interface IQuestion {
   __v: number;
 }
 
-const QuestionDetails = async ({ params }: ParamsProps) => {
+const QuestionDetails = async ({ params, searchParams }: URLProps) => {
   const question: IQuestion = await getQuestionById(params.id);
   const { userId: clerkId } = auth();
 
@@ -130,6 +129,8 @@ const QuestionDetails = async ({ params }: ParamsProps) => {
         questionId={JSON.stringify(question._id)}
         authorId={currentUser._id}
         totalAnswers={question.answers.length}
+        page={searchParams?.page}
+        filter={searchParams?.filter}
       />
 
       <AnswerForm
