@@ -29,7 +29,7 @@ const NotLoggedInVotes = ({ itemId, upvotes, downvotes }: IVotes) => {
       <div className="flex-center gap-2.5">
         <div className="flex-center gap-1.5">
           <Image
-            src={"/assets/icons/upvote.svg"}
+            src={"/assets/icons/upvoted.svg"}
             width={18}
             height={18}
             alt="upvote"
@@ -44,7 +44,7 @@ const NotLoggedInVotes = ({ itemId, upvotes, downvotes }: IVotes) => {
 
         <div className="flex-center gap-1.5">
           <Image
-            src={"/assets/icons/downvote.svg"}
+            src={"/assets/icons/downvoted.svg"}
             width={18}
             height={18}
             alt="downvote"

@@ -6,7 +6,7 @@ import Link from "next/link";
 import Filter from "./Filter";
 import ParseHTML from "./ParseHTML";
 import Votes from "./Votes";
-import NotLoggedInVotes from "./notLoggedInVotes";
+import NotLoggedInVotes from "./NotLoggedInVotes";
 
 interface IAnswerProps {
   authorId: string | null;

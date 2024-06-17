@@ -4,7 +4,7 @@ import Metric from "@/components/shared/Metric";
 import ParseHTML from "@/components/shared/ParseHTML";
 import RenderTags from "@/components/shared/RenderTags";
 import Votes from "@/components/shared/Votes";
-import NotLoggedInVotes from "@/components/shared/notLoggedInVotes";
+import NotLoggedInVotes from "@/components/shared/NotLoggedInVotes";
 import { getQuestionById } from "@/lib/actions/question.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { formatNumber, getTimestamp } from "@/lib/utils";
