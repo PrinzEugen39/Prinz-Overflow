@@ -17,7 +17,7 @@ const EditProfile = async ({ params }: ParamsProps) => {
 
   return (
     <>
-      <h1 className="h1-bold text-dark100_light900">Edit Question</h1>
+      <h1 className="h1-bold text-dark100_light900">Edit Profile</h1>
       <div className="mt-9">
         <EditProfileForm userId={userId} user={JSON.stringify(mongoUser)} />
       </div>

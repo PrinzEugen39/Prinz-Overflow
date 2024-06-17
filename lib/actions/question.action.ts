@@ -19,10 +19,10 @@ export async function getQuestions(params: GetQuestionParams) {
   try {
     connectToDatabase();
 
-    const { searchQuery, filter } = params;
+    const { searchQuery, filter, page = 1, pageSize = 4 } = params;
 
-    // console.log(filter);
-    
+    // Calculate the number of questions to skip based on the page number and the page size
+    const skip = (page - 1) * pageSize;
 
     const query: FilterQuery<typeof Question> = {};
 
@@ -40,7 +40,6 @@ export async function getQuestions(params: GetQuestionParams) {
         sortOptions = { createdAt: -1 };
         break;
       case "recommended":
-        console.log("Recommended questions");
         break;
       case "oldest":
         sortOptions = { createdAt: 1 };
@@ -65,9 +64,21 @@ export async function getQuestions(params: GetQuestionParams) {
         path: "author",
         model: User,
       })
+      .skip(skip)
+      .limit(pageSize)
       .sort(sortOptions);
 
-    return { questions };
+    const totalData = await Question.countDocuments(query);
+    // console.log(totalData);
+
+    // misal totalData ada 8, apakah 8 > (ada di page = 2 * jumlah skip = 4) + jumlah data  = 4
+    const isNext = totalData > skip + questions.length;
+    // console.log(isNext);
+
+    const totalPages = Math.ceil(totalData / pageSize);
+    // console.log(totalPages);
+
+    return { questions, isNext, totalPages };
   } catch (error) {
     console.log(error);
     throw new Error("An error occurred while fetching questions");

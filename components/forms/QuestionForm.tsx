@@ -179,6 +179,7 @@ const QuestionForm = ({ mongoUserId, type, questionDetails }: TQuestion) => {
                     init={{
                       height: 350,
                       menubar: false,
+                      branding: false,
                       plugins: [
                         "advlist",
                         "autolink",

@@ -1,4 +1,5 @@
 import QuestionsCard, { TQuestion } from "@/components/cards/QuestionsCard";
+import CustomPagination from "@/components/shared/CustomPagination";
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
 import LocalSearch from "@/components/shared/search/LocalSearch";
@@ -11,10 +12,11 @@ import { auth } from "@clerk/nextjs";
 export default async function Collection({ searchParams }: SearchParamsProps) {
   const { userId: clerkId } = auth();
 
-  const result = await getAllSavedQuestion({
+  const { savedQuestions, isNext, totalPages } = await getAllSavedQuestion({
     id: clerkId!,
     searchQuery: searchParams.search,
     filter: searchParams.filter,
+    page: searchParams.page ? +searchParams.page : 1,
   });
 
   return (
@@ -35,21 +37,32 @@ export default async function Collection({ searchParams }: SearchParamsProps) {
         />
       </div>
 
-      <div className="mt-10 flex w-full flex-col gap-6">
-        {result?.length > 0 ? (
-          result.map((question: TQuestion) => (
-            <QuestionsCard
-              key={question._id}
-              _id={question._id}
-              title={question.title}
-              tags={question.tags}
-              author={question.author}
-              upvotes={question.upvotes}
-              views={question.views}
-              createdAt={question.createdAt}
-              answers={question.answers}
-            />
-          ))
+      <div className="mt-10 flex w-full flex-col">
+        {savedQuestions?.length > 0 ? (
+          <>
+            <div className="flex flex-col gap-4">
+              {savedQuestions.map((question: TQuestion) => (
+                <QuestionsCard
+                  key={question._id}
+                  _id={question._id}
+                  title={question.title}
+                  tags={question.tags}
+                  author={question.author}
+                  upvotes={question.upvotes}
+                  views={question.views}
+                  createdAt={question.createdAt}
+                  answers={question.answers}
+                />
+              ))}
+            </div>
+            <div className="mt-10 text-dark100_light900">
+              <CustomPagination
+                currentPage={searchParams.page ? +searchParams.page : 1}
+                totalPages={totalPages}
+                isNext={isNext}
+              />
+            </div>
+          </>
         ) : (
           <NoResult
             title="There's no saved questions to show"

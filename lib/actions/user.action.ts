@@ -18,12 +18,14 @@ import Answer from "@/database/answer.model";
 export async function getAllSavedQuestion({
   id,
   page = 1,
-  pageSize = 10,
+  pageSize = 4,
   filter,
   searchQuery,
 }: GetAllParams) {
   try {
     connectToDatabase();
+
+    const skip = (page - 1) * pageSize;
 
     // console.log(searchQuery);
 
@@ -59,8 +61,8 @@ export async function getAllSavedQuestion({
       match: query,
       options: {
         sort: sortOptions,
-        // skip: pageSize * (page - 1),
-        // limit: pageSize,
+        skip,
+        limit: pageSize,
       },
       populate: [
         { path: "tags", model: Tag, select: "_id name" },
@@ -70,9 +72,27 @@ export async function getAllSavedQuestion({
 
     if (!user) throw new Error("User not found");
 
+    const totalSaved = await User.findOne({ clerkId: id }).populate({
+      path: "saved",
+      match: query,
+      options: {
+        sort: sortOptions,
+      },
+    });
+
+    const totalData = totalSaved.saved.length;
+
+    // console.log(totalData);
+
+    // misal totalData ada 8, apakah 8 > (ada di page = 2 * jumlah skip = 4) + jumlah data  = 4
+    const isNext = totalData > skip + user.saved.length;
+    // console.log(isNext);
+
+    const totalPages = Math.ceil(totalData / pageSize);
+
     // console.log(user.saved);
 
-    return user.saved;
+    return { savedQuestions: user.saved, isNext, totalPages };
   } catch (error) {
     console.log(error);
     throw error;
@@ -81,13 +101,14 @@ export async function getAllSavedQuestion({
 
 export async function getAllUsers({
   page = 1,
-  pageSize = 10,
+  pageSize = 6,
   filter,
   searchQuery,
 }: GetAllParams) {
   try {
     connectToDatabase();
     // console.log(searchQuery);
+    const skip = (page - 1) * pageSize;
 
     const query: FilterQuery<typeof User> = {};
     if (searchQuery) {
@@ -114,9 +135,22 @@ export async function getAllUsers({
         break;
     }
 
-    const users = await User.find(query).sort(sortOptions);
+    const users = await User.find(query)
+      .skip(skip)
+      .limit(pageSize)
+      .sort(sortOptions);
 
-    return users;
+    const totalData = await User.countDocuments(query);
+    // console.log(totalData);
+
+    // misal totalData ada 8, apakah 8 > (ada di page = 2 * jumlah skip = 4) + jumlah data  = 4
+    const isNext = totalData > skip + users.length;
+    // console.log(isNext);
+
+    const totalPages = Math.ceil(totalData / pageSize);
+    // console.log(totalPages);
+
+    return { users, isNext, totalPages };
   } catch (error) {
     console.log(error);
     throw error;

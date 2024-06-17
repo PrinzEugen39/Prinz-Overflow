@@ -107,6 +107,7 @@ const AnswerForm = ({ authorId, questionId, question }: IAnswerForm) => {
                     init={{
                       height: 350,
                       menubar: false,
+                      branding: false,
                       plugins: [
                         "advlist",
                         "autolink",
