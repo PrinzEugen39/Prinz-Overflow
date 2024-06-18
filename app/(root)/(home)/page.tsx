@@ -14,12 +14,12 @@ export default async function Home({ searchParams }: SearchParamsProps) {
     searchQuery: searchParams.search,
     filter: searchParams.filter,
     page: searchParams.page ? +searchParams.page : 1,
-  });  
+  });
 
   // Fetch Recommended Questions
 
   return (
-    <>
+    <div className="flex flex-col min-h-full">
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
         <h1 className="h1-bold text-dark100_light900">All Questions</h1>
 
@@ -48,23 +48,25 @@ export default async function Home({ searchParams }: SearchParamsProps) {
       {/* This component only shows on above md breakpoint */}
       {/* <ExpandedHomeFilters /> */}
 
-      <div className="mt-10 flex w-full flex-col gap-6">
+      <div className="mt-10 flex w-full flex-col gap-6 flex-1 justify-between">
         {result?.questions.length > 0 ? (
           <>
-            {result.questions.map((question) => (
-              <QuestionsCard
-                key={question._id}
-                _id={question._id}
-                title={question.title}
-                tags={question.tags}
-                author={question.author}
-                upvotes={question.upvotes}
-                views={question.views}
-                createdAt={question.createdAt}
-                answers={question.answers}
-              />
-            ))}
-            <div className="mt-4 text-dark100_light900">
+            <div className="flex flex-col gap-6">
+              {result.questions.map((question) => (
+                <QuestionsCard
+                  key={question._id}
+                  _id={question._id}
+                  title={question.title}
+                  tags={question.tags}
+                  author={question.author}
+                  upvotes={question.upvotes}
+                  views={question.views}
+                  createdAt={question.createdAt}
+                  answers={question.answers}
+                />
+              ))}
+            </div>
+            <div className="text-dark100_light900">
               <CustomPagination
                 currentPage={searchParams?.page ? +searchParams.page : 1}
                 isNext={result.isNext}
@@ -83,6 +85,6 @@ export default async function Home({ searchParams }: SearchParamsProps) {
           />
         )}
       </div>
-    </>
+    </div>
   );
 }
