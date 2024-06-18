@@ -4,7 +4,7 @@ import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 import Image from "next/image";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import GlobalResults from "./GlobalResults";
+import ResultList from "./ResultList";
 
 export default function GlobalSearch() {
   const router = useRouter();
@@ -15,8 +15,6 @@ export default function GlobalSearch() {
 
   const [search, setSearch] = useState(query || "");
   const [isOpen, setIsOpen] = useState(false);
-
-  console.log(isOpen);
 
   // console.log(pathName, route);
 
@@ -76,7 +74,7 @@ export default function GlobalSearch() {
           className="paragraph-regular text-dark-300 dark:text-light-900 no-focus background-light800_darkgradient placeholder border-none shadow-none outline-none"
         />
       </div>
-      {isOpen && <GlobalResults />}
+      {isOpen && <ResultList />}
     </div>
   );
 }
