@@ -4,7 +4,7 @@ import { formUrlQuery } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-const ResultFilter = () => {
+const ResultFilter = ({ noClick }: { noClick: boolean }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -22,7 +22,7 @@ const ResultFilter = () => {
       });
 
       router.push(newUrl, { scroll: false });
-    } else {
+    } else if (!noClick) {
       setActive(type);
       const newUrl = formUrlQuery({
         params: searchParams.toString(),

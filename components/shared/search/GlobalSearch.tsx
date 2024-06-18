@@ -5,6 +5,7 @@ import Image from "next/image";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import ResultList from "./ResultList";
+import { CrossCircledIcon } from "@radix-ui/react-icons";
 
 export default function GlobalSearch() {
   const router = useRouter();
@@ -17,6 +18,17 @@ export default function GlobalSearch() {
   const [isOpen, setIsOpen] = useState(false);
 
   // console.log(pathName, route);
+
+  function handleReset() {
+    const newUrl = removeKeysFromQuery({
+      params: searchParams.toString(),
+      keysToRemove: ["global", "type"],
+    });
+
+    router.push(newUrl, { scroll: false });
+    setSearch("");
+    setIsOpen(false);
+  }
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -57,7 +69,7 @@ export default function GlobalSearch() {
         />
         <Input
           type="text"
-          placeholder="Search globally..."
+          placeholder="Search globally... (in development)"
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -73,6 +85,11 @@ export default function GlobalSearch() {
           // onBlur={() => setIsOpen(false)}
           className="paragraph-regular text-dark-300 dark:text-light-900 no-focus background-light800_darkgradient placeholder border-none shadow-none outline-none"
         />
+        {search && (
+          <div onClick={handleReset}>
+            <CrossCircledIcon className="text-dark-500 dark:text-light-700 cursor-pointer" />
+          </div>
+        )}
       </div>
       {isOpen && <ResultList />}
     </div>

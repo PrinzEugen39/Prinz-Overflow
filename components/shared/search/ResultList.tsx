@@ -9,6 +9,8 @@ const GlobalResults = () => {
   const searchParams = useSearchParams();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [noClick, setNoClick] = useState(false);
+
   const [result, setResult] = useState([
     {
       type: "question",
@@ -29,15 +31,33 @@ const GlobalResults = () => {
     async function fetchResult() {
       setResult([]);
       setIsLoading(true);
+      setNoClick(true);
 
       try {
-        // fetch data everywhere
+        setTimeout(() => {
+          setResult([
+            {
+              type: "question",
+              id: "1",
+              title: "How to use React?",
+            },
+            {
+              type: "tag",
+              id: "2",
+              title: "javascript",
+            },
+          ]);
+          setIsLoading(false);
+          setNoClick(false);
+        }, 250);
       } catch (error) {
         console.log(error);
         throw error;
-      } finally {
-        setIsLoading(false);
       }
+    }
+
+    if (global) {
+      fetchResult();
     }
   }, [global, type]);
 
@@ -47,7 +67,7 @@ const GlobalResults = () => {
 
   return (
     <div className="absolute top-full z-10 w-full mt-3 background-light800_dark300 rounded-lg shadow-sm dark:shadow-none">
-      <ResultFilter />
+      <ResultFilter noClick={noClick}/>
 
       <div className="border-b border-light-700/85 dark:border-light-400/50"></div>
 
