@@ -16,7 +16,7 @@ export default async function Tags({ searchParams }: SearchParamsProps) {
   });
 
   return (
-    <>
+    <div className="flex flex-col min-h-full">
       <h1 className="h1-bold text-dark100_light900">All Tags</h1>
 
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
@@ -32,7 +32,7 @@ export default async function Tags({ searchParams }: SearchParamsProps) {
           otherClasses="min-h-[56px] sm:min-w-[170px]"
         />
       </div>
-      <section className="mt-12 flex flex-col">
+      <section className="mt-12 flex flex-col flex-1 justify-between">
         {tags.length > 0 ? (
           <>
             <div className="flex flex-wrap gap-4">
@@ -76,6 +76,6 @@ export default async function Tags({ searchParams }: SearchParamsProps) {
           />
         )}
       </section>
-    </>
+    </div>
   );
 }

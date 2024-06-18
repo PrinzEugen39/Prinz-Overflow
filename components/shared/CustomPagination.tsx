@@ -60,11 +60,11 @@ const CustomPagination = ({
   }
 
   return (
-    <Pagination className="select-none">
+    <Pagination className="select-none ">
       <PaginationContent>
-        <PaginationItem>
+        <PaginationItem className="shadow-light100_darknone">
           <PaginationPrevious
-            className={`card-wrapper w-28 mx-auto
+            className={`card-wrapper w-28 mx-auto 
               ${
                 isPrev
                   ? "cursor-pointer hover:bg-light-800 dark:hover:bg-dark-300"
@@ -75,7 +75,7 @@ const CustomPagination = ({
           />
         </PaginationItem>
         {currentPage >= 3 && (
-          <PaginationItem>
+          <PaginationItem className="shadow-light100_darknone">
             <PaginationEllipsis />
           </PaginationItem>
         )}
@@ -83,7 +83,7 @@ const CustomPagination = ({
           const countPage = i + 1;
           if (countPage === currentPage) {
             return (
-              <PaginationItem key={countPage}>
+              <PaginationItem key={countPage} className="shadow-light100_darknone">
                 <PaginationLink className="bg-primary-500 text-white font-semibold">
                   {countPage}
                 </PaginationLink>
@@ -92,7 +92,7 @@ const CustomPagination = ({
           }
           if (countPage > currentPage - 2 && countPage < currentPage + 2) {
             return (
-              <PaginationItem key={countPage}>
+              <PaginationItem key={countPage} className="shadow-light100_darknone">
                 <PaginationLink className="card-wrapper">
                   {countPage}
                 </PaginationLink>
@@ -102,11 +102,11 @@ const CustomPagination = ({
           return null;
         })}
         {currentPage < totalPages - 1 && (
-          <PaginationItem>
+          <PaginationItem className="shadow-light100_darknone">
             <PaginationEllipsis />
           </PaginationItem>
         )}
-        <PaginationItem className="">
+        <PaginationItem className="shadow-light100_darknone">
           <PaginationNext
             className={`card-wrapper w-28 mx-auto  ${
               isNext

@@ -18,11 +18,11 @@ interface ICommunityCardProps {
 const CommunityCard = async ({ user }: ICommunityCardProps) => {
   const interactedTags = await GetTopInteractedTags({ userId: user._id });
   return (
-    <Link
-      href={`/profile/${user.clerkId}`}
-      className="shadow-light100_darknone w-full max-xs:min-w-full xs:w-[260px] active:scale-95 transition ease-in-out"
-    >
-      <article className="background-light900_dark200 light-border flex w-full flex-col items-center justify-center rounded-2xl border p-8">
+    <div className="shadow-light100_darknone w-full max-xs:min-w-full xs:w-[260px] active:scale-95 transition ease-in-out">
+      <Link
+        href={`/profile/${user.clerkId}`}
+        className="background-light900_dark200 light-border flex w-full flex-col items-center justify-center rounded-2xl border p-8"
+      >
         <Image
           src={user.picture}
           alt={"user pfp"}
@@ -44,15 +44,20 @@ const CommunityCard = async ({ user }: ICommunityCardProps) => {
           {interactedTags.length > 0 ? (
             <div className="flex items-center gap-2">
               {interactedTags.map((tag) => (
-                <RenderTags key={tag.id} id={tag.id} tagName={tag.tagName} />
+                <RenderTags
+                  key={tag.id}
+                  id={tag.id}
+                  tagName={tag.tagName}
+                  isLink={false}
+                />
               ))}
             </div>
           ) : (
             <Badge>No tags yet</Badge>
           )}
         </div>
-      </article>
-    </Link>
+      </Link>
+    </div>
   );
 };
 

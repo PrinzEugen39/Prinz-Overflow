@@ -20,7 +20,7 @@ export default async function Collection({ searchParams }: SearchParamsProps) {
   });
 
   return (
-    <>
+    <div className="flex flex-col min-h-full">
       <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>
 
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
@@ -37,7 +37,7 @@ export default async function Collection({ searchParams }: SearchParamsProps) {
         />
       </div>
 
-      <div className="mt-10 flex w-full flex-col">
+      <div className="mt-10 flex w-full flex-col flex-1 justify-between">
         {savedQuestions?.length > 0 ? (
           <>
             <div className="flex flex-col gap-4">
@@ -72,6 +72,6 @@ export default async function Collection({ searchParams }: SearchParamsProps) {
           />
         )}
       </div>
-    </>
+    </div>
   );
 }

@@ -17,7 +17,7 @@ const TagDetails = async ({ params, searchParams }: URLProps) => {
   // console.log(result);
 
   return (
-    <>
+    <div className="flex flex-col min-h-full">
       <h1 className="h1-bold text-dark100_light900">{tagTitle}</h1>
 
       <div className="mt-11 w-full">
@@ -30,7 +30,7 @@ const TagDetails = async ({ params, searchParams }: URLProps) => {
         />
       </div>
 
-      <div className="mt-10 flex w-full flex-col">
+      <div className="mt-10 flex w-full flex-col flex-1 justify-between">
         {questions?.length > 0 ? (
           <>
             <div className="flex flex-col gap-4">
@@ -65,7 +65,7 @@ const TagDetails = async ({ params, searchParams }: URLProps) => {
           />
         )}
       </div>
-    </>
+    </div>
   );
 };
 
