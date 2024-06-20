@@ -68,7 +68,7 @@ const CustomPagination = ({
               ${
                 isPrev
                   ? "cursor-pointer hover:bg-light-800 dark:hover:bg-dark-300"
-                  : "cursor-default opacity-85"
+                  : "cursor-default opacity-50"
               }
             `}
             onClick={handlePrev}
@@ -83,7 +83,10 @@ const CustomPagination = ({
           const countPage = i + 1;
           if (countPage === currentPage) {
             return (
-              <PaginationItem key={countPage} className="shadow-light100_darknone">
+              <PaginationItem
+                key={countPage}
+                className="shadow-light100_darknone"
+              >
                 <PaginationLink className="bg-primary-500 text-white font-semibold">
                   {countPage}
                 </PaginationLink>
@@ -92,7 +95,10 @@ const CustomPagination = ({
           }
           if (countPage > currentPage - 2 && countPage < currentPage + 2) {
             return (
-              <PaginationItem key={countPage} className="shadow-light100_darknone">
+              <PaginationItem
+                key={countPage}
+                className="shadow-light100_darknone"
+              >
                 <PaginationLink className="card-wrapper">
                   {countPage}
                 </PaginationLink>
@@ -111,7 +117,7 @@ const CustomPagination = ({
             className={`card-wrapper w-28 mx-auto  ${
               isNext
                 ? "cursor-pointer hover:bg-light-800 dark:hover:bg-dark-300"
-                : "cursor-default opacity-85"
+                : "cursor-default opacity-50"
             }`}
             onClick={handleNext}
           />

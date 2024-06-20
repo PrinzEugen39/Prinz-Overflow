@@ -39,6 +39,8 @@ const QuestionsCard = ({
 }: TQuestion) => {
   const showActionButtons = clerkId && clerkId === author.clerkId;
 
+  const createdAtDate = createdAt && new Date(createdAt);
+
   // console.log(author);
 
   return (
@@ -46,7 +48,7 @@ const QuestionsCard = ({
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
         <div>
           <span className="subtle-regular text-dark400_light700 line-clamp-1 flex sm:hidden">
-            {getTimestamp(createdAt)}
+            {createdAtDate && getTimestamp(createdAtDate)}
           </span>
           <Link href={`/questions/${_id}`}>
             <h3 className="sm:h3-semibold base-semibold text-dark200_light900 line-clamp-2 overflow-hidden flex-1">
@@ -73,7 +75,7 @@ const QuestionsCard = ({
           imgUrl={author.picture}
           value={author.name}
           alt="user"
-          title={`- asked ${getTimestamp(createdAt)}`}
+          title={`- asked ${createdAtDate && getTimestamp(createdAtDate)}`}
           textStyles="text-dark400_light700 body-medium"
           href={`/profile/${author.clerkId}`}
           isAuthor

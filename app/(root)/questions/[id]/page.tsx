@@ -32,12 +32,11 @@ interface IQuestion {
   content: string;
   tags: ITag[];
   views: number;
-  upvotes: any[];
-  downvotes: any[];
+  upvotes: ObjectId[];
+  downvotes: ObjectId[];
   author: IAuthor;
-  answers: any[];
+  answers: ObjectId[];
   createdAt: Date;
-  __v: number;
 }
 
 const QuestionDetails = async ({ params, searchParams }: URLProps) => {

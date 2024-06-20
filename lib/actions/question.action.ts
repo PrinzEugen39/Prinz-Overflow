@@ -13,15 +13,13 @@ import {
   GetQuestionParams,
   QuestionVoteParams,
 } from "./shared.types";
-import { FilterQuery } from "mongoose";
+import { FilterQuery, FlattenMaps, Types } from "mongoose";
 
 export async function getQuestions(params: GetQuestionParams) {
   try {
     connectToDatabase();
 
-    const { searchQuery, filter, page = 1, pageSize = 2 } = params;
-
-    // Calculate the number of questions to skip based on the page number and the page size
+    const { searchQuery, filter, page = 1, pageSize = 4 } = params;
     const skip = (page - 1) * pageSize;
 
     const query: FilterQuery<typeof Question> = {};
@@ -66,19 +64,47 @@ export async function getQuestions(params: GetQuestionParams) {
       })
       .skip(skip)
       .limit(pageSize)
-      .sort(sortOptions);
+      .sort(sortOptions)
+      .lean();
 
     const totalData = await Question.countDocuments(query);
-    // console.log(totalData);
-
-    // misal totalData ada 8, apakah 8 > (ada di page = 2 * jumlah skip = 4) + jumlah data  = 4
     const isNext = totalData > skip + questions.length;
-    // console.log(isNext);
-
     const totalPages = Math.ceil(totalData / pageSize);
-    // console.log(totalPages);
 
-    return { questions, isNext, totalPages };
+    const convertToPlainObject = (
+      doc: FlattenMaps<any> & Required<{ _id: unknown }>
+    ) => {
+      const obj = { ...doc };
+      for (const key in obj) {
+        if (obj[key] instanceof Types.ObjectId) {
+          obj[key] = obj[key].toString();
+        } else if (Array.isArray(obj[key])) {
+          obj[key] = obj[key].map((item: { toString: () => any }) =>
+            item instanceof Types.ObjectId ? item.toString() : item
+          );
+        } else if (obj[key] instanceof Date) {
+          obj[key] = obj[key].toISOString();
+        } else if (typeof obj[key] === "object" && obj[key] !== null) {
+          obj[key] = convertToPlainObject(obj[key]);
+        }
+      }
+      return obj;
+    };
+
+    const plainQuestions = questions.map((question) =>
+      convertToPlainObject(question)
+    );
+
+    const result = {
+      questions: plainQuestions,
+      isNext,
+      totalPages,
+    };
+
+    // Log the result to check for non-plain objects
+    // console.log(JSON.stringify(result, null, 2));
+
+    return JSON.parse(JSON.stringify(result));
   } catch (error) {
     console.log(error);
     throw new Error("An error occurred while fetching questions");
