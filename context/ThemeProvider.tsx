@@ -1,6 +1,8 @@
 "use client";
 import { ThemeName } from "@/types";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 interface IThemeContext {
   mode: ThemeName;
@@ -10,6 +12,16 @@ interface IThemeContext {
 const ThemeContext = createContext<IThemeContext | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [queryClient] = useState(() => {
+    return new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: 1000 * 60 * 1,
+        },
+      },
+    });
+  });
+
   const [mode, setMode] = useState<ThemeName>("system");
 
   const handleThemeChange = () => {
@@ -17,7 +29,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       localStorage.theme === "dark" ||
       (!("theme" in localStorage) && // jika theme ga ada di localStorage
         window.matchMedia("(prefers-color-scheme: dark)").matches)
-        // jika system kita prefer dark
+      // jika system kita prefer dark
     ) {
       setMode("dark");
       document.documentElement.classList.add("dark");
@@ -33,7 +45,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeContext.Provider value={{ mode, setMode }}>
-      {children}
+      <QueryClientProvider client={queryClient}>
+        {children}
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </ThemeContext.Provider>
   );
 }
