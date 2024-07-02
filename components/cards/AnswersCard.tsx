@@ -5,7 +5,7 @@ import EditDeleteComponent from "../shared/EditDeleteComponent";
 import Metric from "../shared/Metric";
 import ParseHTML from "../shared/ParseHTML";
 
-interface Props {
+interface IAnswerCard {
   clerkId?: string | null;
   _id: string;
   question: {
@@ -31,7 +31,7 @@ const AnswersCard = ({
   content,
   upvotes,
   createdAt,
-}: Props) => {
+}: IAnswerCard) => {
   const showActionButtons = clerkId && clerkId === author.clerkId;
   return (
     <div className="card-wrapper rounded-[10px] px-11 py-9">

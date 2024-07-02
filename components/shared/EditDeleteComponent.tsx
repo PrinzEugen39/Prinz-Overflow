@@ -1,8 +1,10 @@
 "use client";
 import { deleteAnswer } from "@/lib/actions/answer.action";
 import { deleteQuestion } from "@/lib/actions/question.action";
+import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
+import Loader2 from "./Loader2";
 
 interface IEditDeleteComponent {
   itemId: string;
@@ -17,9 +19,17 @@ const EditDeleteComponent = ({ itemId, type }: IEditDeleteComponent) => {
     router.push(`/questions/edit/${JSON.parse(itemId)}`);
   }
 
+  const { isPending, mutate } = useMutation({
+    mutationFn: ({ itemId, path }: { itemId: string; path: string }) =>
+      deleteQuestion({ id: JSON.parse(itemId), path }),
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
   async function handleDelete() {
     if (type === "question") {
-      await deleteQuestion({ id: JSON.parse(itemId), path });
+      mutate({ itemId, path });
     } else if (type === "answer") {
       await deleteAnswer({ id: JSON.parse(itemId), path });
     }
@@ -38,14 +48,18 @@ const EditDeleteComponent = ({ itemId, type }: IEditDeleteComponent) => {
         />
       )}
 
-      <Image
-        src="/assets/icons/trash.svg"
-        alt="delete"
-        width={20}
-        height={20}
-        className="cursor-pointer size-4 object-contain"
-        onClick={handleDelete}
-      />
+      {isPending ? (
+        <Loader2 size={20} />
+      ) : (
+        <Image
+          src="/assets/icons/trash.svg"
+          alt="delete"
+          width={20}
+          height={20}
+          className="cursor-pointer size-4 object-contain"
+          onClick={handleDelete}
+        />
+      )}
     </div>
   );
 };
