@@ -26,10 +26,6 @@ const Filter = ({ filters, constainerClasses, otherClasses }: TFilter) => {
   const paramFilter = searchParams.get("filter");
 
   function handleFilterClick(filter: string) {
-    // console.log(filter);
-
-    // if (active === filter) {
-    //   setActive("");
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       key: "filter",
@@ -40,6 +36,7 @@ const Filter = ({ filters, constainerClasses, otherClasses }: TFilter) => {
 
     router.push(newUrl, { scroll: false });
   }
+  
   return (
     <div className={`relative ${constainerClasses}`}>
       <Select

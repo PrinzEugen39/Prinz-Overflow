@@ -99,16 +99,11 @@ export async function getAllSavedQuestion({
   }
 }
 
-export async function getAllUsers({
-  page = 1,
-  pageSize = 6,
-  filter,
-  searchQuery,
-}: GetAllParams) {
+export async function getAllUsers({ page = 1, pageSize = 9, filter, searchQuery }: GetAllParams) {
   try {
     connectToDatabase();
     // console.log(searchQuery);
-    const skip = (page - 1) * pageSize;
+    const skip = (page - 1) * pageSize;    
 
     const query: FilterQuery<typeof User> = {};
     if (searchQuery) {
@@ -131,24 +126,18 @@ export async function getAllUsers({
         sortOptions = { reputation: -1 };
         break;
       default:
-        sortOptions = { createdAt: -1 };
+        sortOptions = { joinedAt: 1 };
         break;
     }
 
-    const users = await User.find(query)
-      .skip(skip)
-      .limit(pageSize)
-      .sort(sortOptions);
+    const users = await User.find(query).skip(skip).limit(pageSize).sort(sortOptions);
 
     const totalData = await User.countDocuments(query);
-    // console.log(totalData);
 
     // misal totalData ada 8, apakah 8 > (ada di page = 2 * jumlah skip = 4) + jumlah data  = 4
     const isNext = totalData > skip + users.length;
-    // console.log(isNext);
 
     const totalPages = Math.ceil(totalData / pageSize);
-    // console.log(totalPages);
 
     return { users, isNext, totalPages };
   } catch (error) {

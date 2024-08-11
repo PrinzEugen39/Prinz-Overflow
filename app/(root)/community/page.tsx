@@ -26,10 +26,7 @@ export default async function Community({ searchParams }: SearchParamsProps) {
           placeholder="Search for users"
           otherClasses="flex-1"
         />
-        <Filter
-          filters={UserFilters}
-          otherClasses="min-h-[56px] sm:min-w-[170px]"
-        />
+        <Filter filters={UserFilters} otherClasses="min-h-[56px] sm:min-w-[170px]" />
       </div>
       <section className="mt-12 flex flex-col flex-1 justify-between">
         {users.length > 0 ? (

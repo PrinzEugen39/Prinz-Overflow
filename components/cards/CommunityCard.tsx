@@ -17,6 +17,7 @@ interface ICommunityCardProps {
 
 const CommunityCard = async ({ user }: ICommunityCardProps) => {
   const interactedTags = await GetTopInteractedTags({ userId: user._id });
+  
   return (
     <div className="shadow-light100_darknone w-full max-xs:min-w-full xs:w-[260px] active:scale-95 transition ease-in-out">
       <Link
@@ -33,23 +34,16 @@ const CommunityCard = async ({ user }: ICommunityCardProps) => {
 
         <div className="mt-4 text-center">
           <h3 className="h3-bold text-dark200_light900 line-clamp-1">
-            {user.name}
+            {user.name !== "null" ? user.name : user.username}
           </h3>
-          <p className="body-regular text-dark500_light500 mt-2">
-            @{user.username}
-          </p>
+          <p className="body-regular text-dark500_light500 mt-2">@{user.username}</p>
         </div>
 
         <div className="mt-5">
           {interactedTags.length > 0 ? (
             <div className="flex items-center gap-2">
               {interactedTags.map((tag) => (
-                <RenderTags
-                  key={tag.id}
-                  id={tag.id}
-                  tagName={tag.tagName}
-                  isLink={false}
-                />
+                <RenderTags key={tag.id} id={tag.id} tagName={tag.tagName} isLink={false} />
               ))}
             </div>
           ) : (
